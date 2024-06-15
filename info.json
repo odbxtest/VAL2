@@ -1,3 +1,8 @@
 {
-  "VAL2_URL":"https://conc.val2.online/"
+  "VAL2":{
+    "url":"https://conc.val2.online/"
+  },
+  "BASH": {
+    "path":"/root/"
+  }
 }
