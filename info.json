@@ -4,6 +4,6 @@
   },
   "BASH": {
     "path":"/root/val2/",
-    "files":['users.sh','stats.sh']
+    "files":["users.sh","stats.sh"]
   }
 }
