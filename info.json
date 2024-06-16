@@ -5,5 +5,8 @@
   "BASH": {
     "path":"/root/val2/",
     "files":["users.sh","stats.sh"]
+  },
+  "SERVER": {
+    "ssh_ports":["22","6985","771"]
   }
 }
