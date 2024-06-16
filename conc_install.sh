@@ -6,15 +6,15 @@ YE='\033[0;33m'
 NC='\033[0m'
 
 info() {
-    echo -e "${GR}$1${NC}"
+    echo -e "${GR} $1 ${NC}"
 }
 
 warn() {
-    echo -e "${YE}$1${NC}"
+    echo -e "${YE} $1 ${NC}"
 }
 
 error() {
-    echo -e "${RED}$1${NC}"
+    echo -e "${RED} $1 ${NC}"
 }
 
 apt install sudo curl jq -y
