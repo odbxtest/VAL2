@@ -72,6 +72,6 @@ for port in $sshPorts;do
   fi
 done
 
-sudo systemctl restart sshd.service
-sudo systemctl restart ssh
+#sudo systemctl restart sshd.service
+#sudo systemctl restart ssh
 
