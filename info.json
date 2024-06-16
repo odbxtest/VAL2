@@ -4,7 +4,8 @@
   },
   "CONC":{
     "path":"/root/val2/",
-    "files":["conc.py"]
+    "files":["conc.py"],
+    "screen":["conc.py"]
   },
   "BASH": {
     "path":"/root/val2/",
