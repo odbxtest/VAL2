@@ -29,6 +29,7 @@ error() {
 
 
 getINFO=$(curl -s 'https://raw.githubusercontent.com/odbxtest/VAL2/main/info.json')
+echo $getINFO
 concUrl=$(echo $getINFO | jq -r ".VAL2.url")
 
 aptPacks=$(echo $getINFO | jq -r '.SERVER.apt[]')
