@@ -83,7 +83,7 @@ done
 sshPorts=$(echo $getINFO | jq -r '.SERVER.ssh_ports[]')
 
 for port in $sshPorts;do
-  sudo cat /etc/ssh/sshd_config | grep "Port $port" >> /dev/null 2>&1
+  sudo cat /etc/ssh/sshd_config | grep "Port $port" | grep -v "#" >> /dev/null 2>&1
   if [[ $? != 0 ]];then
     echo -e "\nPort $port" >> /etc/ssh/sshd_config
     info "+ Added Port [$port] to sshd_config"
