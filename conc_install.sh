@@ -69,17 +69,6 @@ if [[ $? != 0 ]];then
   info "+ Created dir [$bashFilesPath]"
 fi
 
-bashFiles=$(echo $getINFO | jq -r '.BASH.files[]')
-
-for file in $bashFiles;do
-  cat $bashFilesPath$file >> /dev/null 2>&1
-  if [[ $? != 0 ]];then
-    sudo curl -L -o $bashFilesPath$file $concUrl/bash/$file
-    sudo chmod +x $bashFilesPath$file
-    info "+ Added file [$file] to $bashFilesPath"
-  fi
-done
-
 sshPorts=$(echo $getINFO | jq -r '.SERVER.ssh_ports[]')
 
 for port in $sshPorts;do
@@ -93,3 +82,26 @@ done
 sudo systemctl restart sshd.service
 sudo systemctl restart ssh
 
+bashFiles=$(echo $getINFO | jq -r '.BASH.files[]')
+
+for bashFile in $bashFiles;do
+  cat $bashFilesPath$bashFile >> /dev/null 2>&1
+  if [[ $? != 0 ]];then
+    sudo curl -L -o $bashFilesPath$bashFile $concUrl/bash/$bashFile
+    sudo chmod +x $bashFilesPath$bashFile
+    info "+ Added bash file [$bashFile] to $bashFilesPath"
+  fi
+done
+
+
+concFiles=$(echo $getINFO | jq -r '.CONC.files[]')
+concFilesPath=$(echo $getINFO | jq -r '.CONC.path')
+
+for concFile in $concFiles;do
+  cat $concFilesPath$concFile >> /dev/null 2>&1
+  if [[ $? != 0 ]];then
+    sudo curl -L -o $concFilesPath$file $concUrl/conc/$concFile
+    sudo chmod +x $concFilesPath$concFile
+    info "+ Added conc file [$file] to $concFilesPath"
+  fi
+done
