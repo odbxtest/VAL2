@@ -63,7 +63,7 @@ fi
 
 bashFilesPath=$(echo $getINFO | jq -r '.BASH.path')
 
-ls $bashFilesPath
+ls $bashFilesPath >> /dev/null 2>&1
 if [[ $? != 0 ]];then
   mkdir $bashFilesPath
   info "+ Created dir [$bashFilesPath]"
