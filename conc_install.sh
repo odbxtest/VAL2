@@ -28,15 +28,15 @@ error() {
 }
 
 
-getINFO=$(curl -s 'https://raw.githubusercontent.com/odbxtest/VAL2/main/conc_install.json')
-concUrl=$(echo $getINFO | jq -r '.VAL2.url')
+getINFO=$(curl -s 'https://raw.githubusercontent.com/odbxtest/VAL2/main/info.json')
+concUrl=$(echo $getINFO | jq -r ".VAL2.url")
 
 aptPacks=$(echo $getINFO | jq -r '.SERVER.apt[]')
 aptCMD="sudo apt install -y"
 for aptPack in $aptPacks;do
   aptCMD="${aptCMD} $aptPack"
 done
-info "${aptCMD}"
+warn "${aptCMD}"
 $aptCMD
 
 pipPacks=$(echo $getINFO | jq -r '.SERVER.pip[]')
@@ -44,7 +44,7 @@ pipCMD="pip3 install"
 for pipPack in $pipPacks;do
   pipCMD="${pipCMD} $pipPack"
 done
-info "${pipCMD}"
+warn "${pipCMD}"
 $pipCMD
 
 cat /usr/bin/badvpn-udpgw >> /dev/null 2>&1
