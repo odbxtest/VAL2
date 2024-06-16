@@ -105,3 +105,14 @@ for concFile in $concFiles;do
     info "+ Added conc file [$file] to $concFilesPath"
   fi
 done
+
+concFilesToScreen=$(echo $getINFO | jq -r '.CONC.screen[]')
+
+for screenFile in $concFilesToScreen;do
+  sudo screen -ls | grep "${screenFile}"
+  if [[ $? != 0 ]];then
+    sudo screen -S $screenFile -dmS sudo python3 $concFilesPath$screenFile
+    info "+ Started ${screenFile} in screen"
+  fi
+done
+
