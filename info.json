@@ -7,6 +7,8 @@
     "files":["users.sh","stats.sh"]
   },
   "SERVER": {
-    "ssh_ports":["22","6985","771"]
+    "ssh_ports":["22","6985","771"],
+    "apt":["openssl", "screen", "iptables", "cron", "wget", "nano", "zip", "python3-pip"],
+    "pip":["requests"]
   }
 }
