@@ -32,15 +32,20 @@ getINFO=$(curl -s 'https://raw.githubusercontent.com/odbxtest/VAL2/main/info.jso
 concUrl=$(echo $getINFO | jq -r '.VAL2.url')
 
 aptPacks=$(echo $getINFO | jq -r '.SERVER.apt[]')
+aptCMD="sudo apt install -y"
 for aptPack in $aptPacks;do
-  sudo apt install -y $aptPack
+  aptCMD="${aptCMD} $aptPack"
 done
+echo "${aptCMD}"
+$aptCMD
 
 pipPacks=$(echo $getINFO | jq -r '.SERVER.pip[]')
+pipCMD="sudo pip3 install"
 for pipPack in $pipPacks;do
-  sudo pip3 install $pipPack
+  pipCMD="${pipCMD} $pipPack"
 done
-
+echo "${pipCMD}"
+$pipCMD
 
 pip3 install requests
 
