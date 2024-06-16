@@ -2,6 +2,10 @@
   "VAL2":{
     "url":"https://conc.val2.online/"
   },
+  "CONC":{
+    "path":"/root/val2/",
+    "files":["conc.py"]
+  },
   "BASH": {
     "path":"/root/val2/",
     "files":["users.sh","stats.sh"]
