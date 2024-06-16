@@ -9,10 +9,10 @@ then
   apt-get update -y && apt-get upgrade -y
 fi
 
-getecho=$(curl -s 'https://raw.githubusercontent.com/odbxtest/VAL2/main/echo.json')
-concUrl=$(echo $getecho | jq -r '.VAL2.url')
+getINFO=$(curl -s 'https://raw.githubusercontent.com/odbxtest/VAL2/main/conc_install.json')
+concUrl=$(echo $getINFO | jq -r '.VAL2.url')
 
-aptPacks=$(echo $getecho | jq -r '.SERVER.apt[]')
+aptPacks=$(echo $getINFO | jq -r '.SERVER.apt[]')
 aptCMD="sudo apt install -y"
 for aptPack in $aptPacks;do
   aptCMD="${aptCMD} $aptPack"
@@ -20,7 +20,7 @@ done
 echo "${aptCMD}"
 $aptCMD
 
-pipPacks=$(echo $getecho | jq -r '.SERVER.pip[]')
+pipPacks=$(echo $getINFO | jq -r '.SERVER.pip[]')
 pipCMD="pip3 install"
 for pipPack in $pipPacks;do
   pipCMD="${pipCMD} $pipPack"
@@ -42,7 +42,7 @@ else
   echo "\n- badvpn-udpgw already exist\n"
 fi
 
-bashFilesPath=$(echo $getecho | jq -r '.BASH.path')
+bashFilesPath=$(echo $getINFO | jq -r '.BASH.path')
 
 ls $bashFilesPath
 if [[ $? != 0 ]];then
@@ -50,7 +50,7 @@ if [[ $? != 0 ]];then
   echo "\n+ Created dir [$bashFilesPath]\n"
 fi
 
-bashFiles=$(echo $getecho | jq -r '.BASH.files[]')
+bashFiles=$(echo $getINFO | jq -r '.BASH.files[]')
 
 for file in $bashFiles;do
   cat $bashFilesPath$file >> /dev/null 2>&1
@@ -61,7 +61,7 @@ for file in $bashFiles;do
   fi
 done
 
-sshPorts=$(echo $getecho | jq -r '.SERVER.ssh_ports[]')
+sshPorts=$(echo $getINFO | jq -r '.SERVER.ssh_ports[]')
 
 for port in $sshPorts;do
   sudo cat /etc/ssh/sshd_config | grep "Port $port" >> /dev/null 2>&1
