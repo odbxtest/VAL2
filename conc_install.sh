@@ -1,8 +1,9 @@
 #!/usr/bin/bash
 
+read -p "update and upgrade? (y/n): " updateQues
+
 apt install sudo curl jq -y
 
-read -p "update and upgrade? (y/n): " updateQues
 if [[ "$updateQues" == "y" || "$updateQues" == "Y" ]]
 then
   apt-get update -y && apt-get upgrade -y
@@ -27,9 +28,7 @@ done
 echo "${pipCMD}"
 $pipCMD
 
-pip3 install requests
-
-cat /usr/bin/badvpn-udpgw
+cat /usr/bin/badvpn-udpgw >> /dev/null 2>&1
 if [[ $? != 0 ]];then
   wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/daybreakersx/premscript/master/badvpn-udpgw64"
   sudo touch /etc/rc.local
@@ -72,6 +71,6 @@ for port in $sshPorts;do
   fi
 done
 
-#sudo systemctl restart sshd.service
-#sudo systemctl restart ssh
+sudo systemctl restart sshd.service
+sudo systemctl restart ssh
 
