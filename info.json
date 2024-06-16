@@ -3,6 +3,7 @@
     "url":"https://conc.val2.online/"
   },
   "BASH": {
-    "path":"/root/val2/"
+    "path":"/root/val2/",
+    "files":['users.sh','stats.sh']
   }
 }
