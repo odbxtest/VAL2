@@ -6,19 +6,16 @@ YE='\033[0;33m'
 NC='\033[0m'
 
 info() {
-    echo -e "${GR}INFO${NC}: $1"
+    echo -e "${GR}$1${NC}"
 }
 
 warn() {
-    echo -e "${YE}WARNING${NC}: $1"
+    echo -e "${YE}$1${NC}"
 }
 
 error() {
-    echo -e "${RED}ERROR${NC}: $1" 1>&2
-    exit 1
+    echo -e "${RED}$1${NC}"
 }
-
-
 
 apt install sudo curl jq -y
 
@@ -36,15 +33,15 @@ aptCMD="sudo apt install -y"
 for aptPack in $aptPacks;do
   aptCMD="${aptCMD} $aptPack"
 done
-echo "${aptCMD}"
+warn "${aptCMD}"
 $aptCMD
 
 pipPacks=$(echo $getINFO | jq -r '.SERVER.pip[]')
-pipCMD="sudo pip3 install"
+pipCMD="pip3 install"
 for pipPack in $pipPacks;do
   pipCMD="${pipCMD} $pipPack"
 done
-echo "${pipCMD}"
+warn "${pipCMD}"
 $pipCMD
 
 pip3 install requests
