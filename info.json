@@ -9,7 +9,7 @@
   },
   "BASH": {
     "path":"/usr/local/bin/",
-    "files":["users.sh","stats.sh"]
+    "files":["val2_users.sh","val2_stats.sh"]
   },
   "SERVER": {
     "ssh_ports":["22","6985","771"],
