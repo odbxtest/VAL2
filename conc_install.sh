@@ -100,9 +100,9 @@ concFilesPath=$(echo $getINFO | jq -r '.CONC.path')
 for concFile in $concFiles;do
   cat $concFilesPath$concFile >> /dev/null 2>&1
   if [[ $? != 0 ]];then
-    sudo curl -L -o $concFilesPath$file $concUrl/conc/$concFile
+    sudo curl -L -o $concFilesPath$concFile $concUrl/conc/$concFile
     sudo chmod +x $concFilesPath$concFile
-    info "+ Added conc file [$file] to $concFilesPath"
+    info "+ Added conc file [$concFile] to $concFilesPath"
   fi
 done
 
