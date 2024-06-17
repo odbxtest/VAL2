@@ -8,7 +8,7 @@
     "screen":["conc.py"]
   },
   "BASH": {
-    "path":"/root/val2/",
+    "path":"/usr/local/bin",
     "files":["users.sh","stats.sh"]
   },
   "SERVER": {
