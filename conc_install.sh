@@ -70,6 +70,16 @@ if [[ $? != 0 ]];then
   sudo chmod 755 $bashFilesPath
 fi
 
+concFilesPath=$(echo $getINFO | jq -r '.CONC.path')
+
+ls $concFilesPath >> /dev/null 2>&1
+if [[ $? != 0 ]];then
+  mkdir $concFilesPath
+  info "+ Created dir [$concFilesPath]"
+  sudo chmod 755 $concFilesPath
+fi
+
+
 sshPorts=$(echo $getINFO | jq -r '.SERVER.ssh_ports[]')
 
 for port in $sshPorts;do
