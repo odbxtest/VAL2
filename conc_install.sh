@@ -67,6 +67,7 @@ ls $bashFilesPath >> /dev/null 2>&1
 if [[ $? != 0 ]];then
   mkdir $bashFilesPath
   info "+ Created dir [$bashFilesPath]"
+  sudo chmod 755 $bashFilesPath
 fi
 
 sshPorts=$(echo $getINFO | jq -r '.SERVER.ssh_ports[]')
