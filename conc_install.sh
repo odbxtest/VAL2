@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 read -p "update and upgrade? (y/n): " updateQues
 
