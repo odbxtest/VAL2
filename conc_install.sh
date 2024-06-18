@@ -100,6 +100,7 @@ for bashFile in $bashFiles;do
   if [[ $? != 0 ]];then
     sudo curl -L -o $bashFilesPath$bashFile $concUrl/bash/$bashFile
     sudo chmod +x $bashFilesPath$bashFile
+    sed -i -e 's/\r$//' $bashFilesPath$bashFile
     info "+ Added bash file [$bashFile] to $bashFilesPath"
   fi
 done
