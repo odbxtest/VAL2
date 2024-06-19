@@ -128,3 +128,5 @@ for screenFile in $concFilesToScreen;do
   fi
 done
 
+exit 0
+
