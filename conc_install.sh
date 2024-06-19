@@ -1,14 +1,5 @@
 #!/bin/bash
 
-read -p "update and upgrade? (y/n): " updateQues
-
-apt install sudo curl jq -y
-
-if [[ "$updateQues" == "y" || "$updateQues" == "Y" ]]
-then
-  apt-get update -y && apt-get upgrade -y
-fi
-
 RED='\033[0;31m'
 GR='\033[0;32m'
 YE='\033[0;33m'
@@ -27,6 +18,7 @@ error() {
     exit 1
 }
 
+apt install sudo curl jq -y
 
 getINFO=$(curl -s 'https://raw.githubusercontent.com/odbxtest/VAL2/main/info.json')
 concUrl=$(echo $getINFO | jq -r ".VAL2.url")
