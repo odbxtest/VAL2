@@ -122,9 +122,13 @@ for screenFile in $concFilesToScreen;do
   sudo screen -ls | grep "${screenFile}"
   if [[ $? != 0 ]];then
     sudo screen -S $screenFile -dmS sudo python3 $concFilesPath$screenFile
-    sed -i '/exit 0/d' /etc/rc.local
-    echo -e '\nscreen -S $screenFile -dmS sudo python3 $concFilesPath$screenFile\nexit 0' >> /etc/rc.local
     info "+ Started ${screenFile} in screen"
+
+    sudo cat /etc/rc.local | grep "${screenFile}"
+    if [[ $? != 0 ]];then
+      sed -i '/exit 0/d' /etc/rc.local
+      echo -e '\nscreen -S $screenFile -dmS sudo python3 $concFilesPath$screenFile\nexit 0' >> /etc/rc.local
+    fi
   fi
 done
 
