@@ -128,6 +128,7 @@ for screenFile in $concFilesToScreen;do
     if [[ $? != 0 ]];then
       sed -i '/exit 0/d' /etc/rc.local
       echo -e '\nscreen -S $screenFile -dmS sudo python3 $concFilesPath$screenFile\nexit 0' >> /etc/rc.local
+      info "+ Added ${screenFile} to /etc/rc.local"
     fi
   fi
 done
