@@ -39,14 +39,20 @@ done
 warn "${pipCMD}"
 $pipCMD
 
+cat /etc/rc.local >> /dev/null 2>&1
+if [[ $? != 0 ]];then
+  sudo touch /etc/rc.local
+  echo -e '#!/bin/sh -e' >> /etc/rc.local
+  chmod +x /etc/rc.local
+fi
+
 cat /usr/bin/badvpn-udpgw >> /dev/null 2>&1
 if [[ $? != 0 ]];then
   wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/daybreakersx/premscript/master/badvpn-udpgw64"
-  sudo touch /etc/rc.local
-  echo -e '#!/bin/sh -e\nscreen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500\nexit 0' >> /etc/rc.local
-  chmod +x /etc/rc.local
   sudo chmod +x /usr/bin/badvpn-udpgw
   sudo screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500
+  sed -i '/exit 0/d' /etc/rc.local
+  echo -e '\nscreen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500\nexit 0' >> /etc/rc.local
   info "+ badvpn-udpgw installed"
   warn "YOU MAY NEED TO REBOOT SERVER"
 else
@@ -116,6 +122,8 @@ for screenFile in $concFilesToScreen;do
   sudo screen -ls | grep "${screenFile}"
   if [[ $? != 0 ]];then
     sudo screen -S $screenFile -dmS sudo python3 $concFilesPath$screenFile
+    sed -i '/exit 0/d' /etc/rc.local
+    echo -e '\nscreen -S $screenFile -dmS sudo python3 $concFilesPath$screenFile\nexit 0' >> /etc/rc.local
     info "+ Started ${screenFile} in screen"
   fi
 done
