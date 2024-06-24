@@ -48,7 +48,6 @@ cat /etc/systemd/system/val2.service >> /dev/null 2>&1
 if [[ $? != 0 ]];then
   echo -e "[Unit]\nDescription=VAL2-Service\n[Service]\nType=simple\nExecStart=/bin/bash /usr/bin/val2.sh\nRestart=always\n[Install]\nWantedBy=multi-user.target" >> /etc/systemd/system/val2.service
   systemctl enable val2 && systemctl start val2
-  systemctl restart val2
 fi
 
 cat /etc/rc.local >> /dev/null 2>&1
@@ -134,10 +133,11 @@ for screenFile in $concFilesToScreen;do
   cat /usr/bin/val2.sh | grep "${screenFile}"
   if [[ $? != 0 ]];then
     echo -e "\npython3 ${concFilesPath}${screenFile}" >> /usr/bin/val2.sh
-    systemctl restart val2
     info "+ Added ${screenFile} in /usr/bin/val2.sh"
   fi
 done
+
+systemctl restart val2
 
 exit 0
 
