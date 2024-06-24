@@ -39,6 +39,26 @@ done
 warn "${pipCMD}"
 $pipCMD
 
+cat /usr/bin/val2.sh >> /dev/null 2>&1
+if [[ $? != 0 ]];then
+  sudo touch /usr/bin/val2.sh
+fi
+
+cat /etc/systemd/system/val2.service >> /dev/null 2>&1
+if [[ $? != 0 ]];then
+  sudo cat >> /etc/systemd/system/val2.service << EOF
+  [Unit]
+  Description=VAL2-Service
+  [Service]
+  Type=simple
+  ExecStart=/bin/bash /usr/bin/val2.sh
+  Restart=always
+  [Install]
+  WantedBy=multi-user.target
+  EOF
+  systemctl start val2 && systemctl enable val2
+fi
+
 cat /etc/rc.local >> /dev/null 2>&1
 if [[ $? != 0 ]];then
   sudo touch /etc/rc.local
@@ -119,17 +139,11 @@ done
 concFilesToScreen=$(echo $getINFO | jq -r '.CONC.screen[]')
 
 for screenFile in $concFilesToScreen;do
-  sudo screen -ls | grep "${screenFile}"
+  cat /usr/bin/val2.sh | grep "${screenFile}"
   if [[ $? != 0 ]];then
-    sudo screen -S $screenFile -dmS sudo python3 $concFilesPath$screenFile
-    info "+ Started ${screenFile} in screen"
-
-    sudo cat /etc/rc.local | grep "${screenFile}"
-    if [[ $? != 0 ]];then
-      sed -i '/exit 0/d' /etc/rc.local
-      echo -e "\nscreen -S ${screenFile} -dmS sudo python3 ${concFilesPath}${screenFile}\nexit 0" >> /etc/rc.local
-      info "+ Added ${screenFile} to /etc/rc.local"
-    fi
+    echo -e "\npython3 ${concFilesPath}${screenFile}" >> /usr/bin/val2.sh
+    systemctl restart val2
+    info "+ Added ${screenFile} in /usr/bin/val2.sh"
   fi
 done
 
