@@ -46,16 +46,7 @@ fi
 
 cat /etc/systemd/system/val2.service >> /dev/null 2>&1
 if [[ $? != 0 ]];then
-  sudo cat >> /etc/systemd/system/val2.service << EOF
-  [Unit]
-  Description=VAL2-Service
-  [Service]
-  Type=simple
-  ExecStart=/bin/bash /usr/bin/val2.sh
-  Restart=always
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+  echo -e "[Unit]\nDescription=VAL2-Service\n[Service]\ntype=simple\nExecStart=/bin/bash /usr/bin/val2.sh\nRestart=always\n[Install]\nWantedBy=multi-user.target" >> /etc/systemd/system/val2.service
   systemctl start val2 && systemctl enable val2
 fi
 
