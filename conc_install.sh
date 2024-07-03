@@ -141,5 +141,7 @@ sleep 3
 
 systemctl restart val2
 
+hostname -I
+
 exit 0
 
