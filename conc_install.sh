@@ -142,7 +142,7 @@ done
 
 sleep 3
 
-systemctl restart val2
+sudo systemctl restart val2
 
 hostname -I
 
