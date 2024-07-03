@@ -146,7 +146,7 @@ for screenFile in $concFilesToScreen;do
 done
 
 sleep 3
-sudo systemctl restart
+sudo systemctl restart val2
 
 hostname -I
 
