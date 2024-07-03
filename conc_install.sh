@@ -137,6 +137,8 @@ for screenFile in $concFilesToScreen;do
   fi
 done
 
+sleep 3
+
 systemctl restart val2
 
 exit 0
