@@ -20,6 +20,7 @@ error() {
 
 apt install sudo curl jq -y
 
+warn "configure IPV6"
 cat /etc/sysctl.conf | grep "disable_ipv6"
 if [[ $? != 0 ]];then
   echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
