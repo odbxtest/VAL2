@@ -52,6 +52,9 @@ if [[ $? != 0 ]];then
   sudo touch /usr/bin/val2.sh
 fi
 
+concPort=$(echo $getINFO | jq -r ".SERVER.conc_port")
+sudo lsof -t -i :$concPort | awk '{print "Killing process: " $0}' && sudo kill -9 $(sudo lsof -t -i :$concPort) || echo "No process found on port $concPort."
+
 cat /etc/systemd/system/val2.service >> /dev/null 2>&1
 if [[ $? != 0 ]];then
   echo -e "[Unit]\nDescription=VAL2-Service\n[Service]\nType=simple\nExecStart=/bin/bash /usr/bin/val2.sh\nRestart=always\n[Install]\nWantedBy=multi-user.target" >> /etc/systemd/system/val2.service
