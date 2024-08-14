@@ -58,7 +58,7 @@ sudo lsof -t -i :$concPort | awk '{print "Killing process: " $0}' && sudo kill -
 cat /etc/systemd/system/val2.service >> /dev/null 2>&1
 if [[ $? != 0 ]];then
   echo -e "[Unit]\nDescription=VAL2-Service\n[Service]\nType=simple\nExecStart=/bin/bash /usr/bin/val2.sh\nRestart=always\n[Install]\nWantedBy=multi-user.target" >> /etc/systemd/system/val2.service
-  systemctl enable val2 && systemctl start val2 && sleep 1 && systemctl restart val2
+  systemctl start val2 && systemctl enable val2
 fi
 
 cat /etc/rc.local >> /dev/null 2>&1
