@@ -162,7 +162,7 @@ fi
 
 sudo sed -i '/@include common-auth/i auth required pam_exec.so /usr/local/bin/check_login.py' /etc/pam.d/sshd && echo 'session optional pam_exec.so /usr/local/bin/cleanup_session.py' | sudo tee -a /etc/pam.d/sshd > /dev/null
 
-concPort=$(jq -r '.SERVER.conc_port' getINFO) && sudo tee /etc/cron.hourly/cleanup_sessions > /dev/null <<EOF
+concPort=$(echo "$getINFO" | jq -r '.SERVER.conc_port') && sudo tee /etc/cron.hourly/cleanup_sessions > /dev/null <<EOF
 #!/bin/bash
 for user in \$(sqlite3 /var/run/user_sessions.db "SELECT DISTINCT username FROM sessions"); do
     if ! pgrep -u "\$user" sshd > /dev/null; then
