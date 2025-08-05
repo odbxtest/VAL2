@@ -179,7 +179,9 @@ else
     echo "Session line already present."
 fi
 
-concPort=$(echo "$getINFO" | jq -r '.SERVER.conc_port') && sudo tee /etc/cron.hourly/cleanup_sessions > /dev/null <<EOF
+concPort=$(echo "$getINFO" | jq -r '.SERVER.conc_port')
+
+sudo tee /etc/cron.hourly/cleanup_sessions > /dev/null <<EOF
 #!/bin/bash
 for user in \$(sqlite3 /var/run/user_sessions.db "SELECT DISTINCT username FROM sessions"); do
     if ! pgrep -u "\$user" sshd > /dev/null; then
