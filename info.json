@@ -3,6 +3,7 @@
     "url":"http://conc.val2.valdomusic.com/"
   },
   "CONC":{
+    "api":"http://conc.val2.valdomusic.com/Agent.php",
     "path":"/root/val2/",
     "files":["conc.py"],
     "screen":["conc.py"],
