@@ -160,7 +160,24 @@ if ! systemctl is-active --quiet val2; then
   info "+ Restarted val2 service"
 fi
 
-sudo sed -i '/@include common-auth/i auth required pam_exec.so /usr/local/bin/check_login.py' /etc/pam.d/sshd && echo 'session optional pam_exec.so /usr/local/bin/cleanup_session.py' | sudo tee -a /etc/pam.d/sshd > /dev/null
+AUTH_LINE='auth required pam_exec.so /usr/local/bin/check_login.py'
+SESSION_LINE='session optional pam_exec.so /usr/local/bin/cleanup_session.py'
+
+# Add auth line if not already present
+if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
+    sudo sed -i "/@include common-auth/i $AUTH_LINE" "/etc/pam.d/sshd"
+    echo "Added auth line."
+else
+    echo "Auth line already present."
+fi
+
+# Add session line if not already present
+if ! grep -Fxq "$SESSION_LINE" "/etc/pam.d/sshd"; then
+    echo "$SESSION_LINE" | sudo tee -a "/etc/pam.d/sshd" > /dev/null
+    echo "Added session line."
+else
+    echo "Session line already present."
+fi
 
 concPort=$(echo "$getINFO" | jq -r '.SERVER.conc_port') && sudo tee /etc/cron.hourly/cleanup_sessions > /dev/null <<EOF
 #!/bin/bash
