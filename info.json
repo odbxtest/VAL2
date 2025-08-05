@@ -5,7 +5,8 @@
   "CONC":{
     "path":"/root/val2/",
     "files":["conc.py"],
-    "screen":["conc.py"]
+    "screen":["conc.py"],
+    "database":"users.db"
   },
   "BASH": {
     "path":"/root/val2/",
