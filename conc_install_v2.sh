@@ -179,21 +179,6 @@ else
     echo "Session line already present."
 fi
 
-concPort=$(echo "$getINFO" | jq -r '.SERVER.conc_port')
-
-sudo tee /etc/cron.hourly/cleanup_sessions > /dev/null <<EOF
-#!/bin/bash
-for user in \$(sqlite3 /var/run/user_sessions.db "SELECT DISTINCT username FROM sessions"); do
-    if ! pgrep -u "\$user" sshd > /dev/null; then
-        sqlite3 /var/run/user_sessions.db "DELETE FROM sessions WHERE username = '\$user'"
-        curl -s -X POST "http://localhost:$concPort/log-login" \\
-            -H "Content-Type: application/json" \\
-            -d "{\"username\": \"\$user\", \"status\": \"logged_out\"}"
-    fi
-done
-EOF
-sudo chmod +x /etc/cron.hourly/cleanup_sessions
-
 # Display server IP
 hostname -I
 
