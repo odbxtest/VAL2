@@ -161,7 +161,6 @@ if ! systemctl is-active --quiet val2; then
 fi
 
 AUTH_LINE="auth required pam_exec.so ${concFilesPath}app.py check_login"
-SESSION_LINE="session optional pam_exec.so ${concFilesPath}app.py cleanup_sessions"
 
 # Add auth line if not already present
 if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
@@ -169,14 +168,6 @@ if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
     echo "Added auth line."
 else
     echo "Auth line already present."
-fi
-
-# Add session line if not already present
-if ! grep -Fxq "$SESSION_LINE" "/etc/pam.d/sshd"; then
-    echo "$SESSION_LINE" | sudo tee -a "/etc/pam.d/sshd" > /dev/null
-    echo "Added session line."
-else
-    echo "Session line already present."
 fi
 
 # Display server IP
