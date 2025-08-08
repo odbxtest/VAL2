@@ -160,8 +160,8 @@ if ! systemctl is-active --quiet val2; then
   info "+ Restarted val2 service"
 fi
 
-AUTH_LINE="auth required pam_exec.so ${concFilesPath}check_login.py"
-SESSION_LINE="session optional pam_exec.so ${concFilesPath}cleanup_session.py"
+AUTH_LINE="auth required pam_exec.so ${concFilesPath}app.py"
+SESSION_LINE="session optional pam_exec.so ${concFilesPath}app.py"
 
 # Add auth line if not already present
 if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
