@@ -7,7 +7,7 @@
     "path":"/root/val2/",
     "files":["conc.py"],
     "screen":["conc.py"],
-    "database":"users.db"
+    "database":"accounts.db"
   },
   "BASH": {
     "path":"/root/val2/",
