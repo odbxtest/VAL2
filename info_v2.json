@@ -1,0 +1,9 @@
+{
+  "agent":"http://conc.val2.valdomusic.com/Agent.php",
+  "conc_port":"10099",
+  "path":"/root/VAL2CONC",
+  "database_file":"accounts.db",
+  "ssh_ports":["22","6985","771"],
+  "apt":["sudo", "jq", "curl", "openssl", "screen", "iptables", "cron", "wget", "nano", "zip", "python3-pip"],
+  "pip":["requests"]
+}
