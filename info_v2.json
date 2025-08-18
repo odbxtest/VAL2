@@ -5,6 +5,6 @@
   "path":"/root/VAL2CONC",
   "database":"accounts.db",
   "ssh_ports":["22","6985","771"],
-  "apt":["sudo", "jq", "python3-pip", "curl", "openssl", "screen", "iptables", "cron", "wget", "nano", "zip", "nethogs"],
+  "apt-get":["sudo", "jq", "python3-pip", "curl", "openssl", "screen", "iptables", "cron", "wget", "nano", "zip", "libncurses6", "libpcap0.8","nethogs"],
   "pip":["requests"]
 }
