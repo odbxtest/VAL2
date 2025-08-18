@@ -5,5 +5,6 @@
   "database":"accounts.db",
   "ssh_ports":["22","6985","771"],
   "apt":["sudo", "jq", "curl", "openssl", "screen", "iptables", "cron", "wget", "nano", "zip", "python3-pip"],
-  "pip":["requests"]
+  "pip":["requests"],
+  "online_limit_check":True
 }
