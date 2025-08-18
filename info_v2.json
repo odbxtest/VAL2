@@ -6,5 +6,5 @@
   "ssh_ports":["22","6985","771"],
   "apt":["sudo", "jq", "curl", "openssl", "screen", "iptables", "cron", "wget", "nano", "zip", "python3-pip"],
   "pip":["requests"],
-  "online_limit_check":True
+  "online_limit_check":true
 }
