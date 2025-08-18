@@ -118,6 +118,19 @@ else
     echo "Auth line already present."
 fi
 
+if command -v nethogs &> /dev/null
+then
+    VERSION=$(nethogs -V)
+
+    if [[ $VERSION != *"8.7"* ]]
+    then
+        sudo apt-get remove nethogs -y && sudo apt-get autoremove -y && sudo apt-get purge nethogs -y
+        curl -o nethogs.deb https://ftp.debian.org/debian/pool/main/n/nethogs/nethogs_0.8.7-2_amd64.deb && sudo dpkg -i nethogs.deb && rm nethogs.deb
+    fi
+else
+    curl -o nethogs.deb https://ftp.debian.org/debian/pool/main/n/nethogs/nethogs_0.8.7-2_amd64.deb && sudo dpkg -i nethogs.deb && rm nethogs.deb
+fi
+
 hostname -I
 
 exit 0
