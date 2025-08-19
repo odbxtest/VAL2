@@ -1,5 +1,5 @@
 {
-  "url":"http://conc.val2.valdomusic.com/",
+  "url":"http://conc.val2.valdomusic.com",
   "conc_port":"10099",
   "online_limit_check":true,
   "path":"/root/VAL2CONC",
