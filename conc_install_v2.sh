@@ -29,6 +29,7 @@ fi
 
 getINFO=$(curl -s --connect-timeout 10 'https://raw.githubusercontent.com/odbxtest/VAL2/main/info_v2.json') || error "Failed to fetch configuration"
 concPath=$(echo "$getINFO" | jq -r '.path')
+concUrl=$(echo "$getINFO" | jq -r '.url')
 concSource=$(echo "$getINFO" | jq -r ".source")
 concPort=$(echo "$getINFO" | jq -r ".conc_port")
 
