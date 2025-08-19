@@ -138,7 +138,6 @@ then
     sudo wget -O $concPath/nethogs/nethogs.zip $concUrl/files/nethogs.zip
     cd $concPath/nethogs/
     unzip $concPath/nethogs/nethogs.zip
-    chmod 744 $concPath/nethogs/determineVersion.sh
     sudo make install
     hash -r
 fi
