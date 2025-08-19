@@ -135,13 +135,10 @@ if [[ $installNethogs == true ]]
 then
     sudo apt-get install libncurses5-dev libpcap-dev -y
     mkdir $concPath/nethogs
-    sudo wget -O $concPath/nethogs/nethogs.zip $concUrlfiles/nethogs.zip
-    cd $concPath/nethogs
-    unzip nethogs.zip
-    chmod 744 determineVersion.sh
-    ./configure
-    make
-    sudo make install
+    sudo wget -O $concPath/nethogs/nethogs.zip $concUrl/files/nethogs.zip
+    unzip $concPath/nethogs/nethogs.zip
+    chmod 744 $concPath/nethogs/determineVersion.sh
+    cd $concPath/nethogs/ && ./configure && make && sudo make install
 fi
 
 hostname -I
