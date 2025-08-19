@@ -30,7 +30,6 @@ fi
 getINFO=$(curl -s --connect-timeout 10 'https://raw.githubusercontent.com/odbxtest/VAL2/main/info_v2.json') || error "Failed to fetch configuration"
 concPath=$(echo "$getINFO" | jq -r '.path')
 concUrl=$(echo "$getINFO" | jq -r '.url')
-concSource=$(echo "$getINFO" | jq -r ".source")
 concPort=$(echo "$getINFO" | jq -r ".conc_port")
 
 aptPacks=$(echo "$getINFO" | jq -r '.apt-get[]')
@@ -119,17 +118,30 @@ else
     echo "Auth line already present."
 fi
 
+installNethogs=true
 if command -v nethogs &> /dev/null
 then
     VERSION=$(nethogs -V)
 
-    if [[ $VERSION != *"8.7"* ]]
+    if [[ $VERSION == *"8.7"* ]]
     then
+        installNethogs=false
+    else
         sudo apt-get remove nethogs -y && sudo apt-get autoremove -y && sudo apt-get purge nethogs -y
-        curl -o nethogs.deb https://ftp.debian.org/debian/pool/main/n/nethogs/nethogs_0.8.7-2_amd64.deb && sudo dpkg -i nethogs.deb && rm nethogs.deb
     fi
-else
-    curl -o nethogs.deb https://ftp.debian.org/debian/pool/main/n/nethogs/nethogs_0.8.7-2_amd64.deb && sudo dpkg -i nethogs.deb && rm nethogs.deb
+fi
+
+if [[ $installNethogs == true ]]
+then
+    sudo apt-get install libncurses5-dev libpcap-dev -y
+    mkdir $concPath/nethogs
+    sudo wget -O $concPath/nethogs/nethogs.zip $concUrlfiles/nethogs.zip
+    cd $concPath/nethogs
+    unzip nethogs.zip
+    chmod 744 determineVersion.sh
+    ./configure
+    make
+    sudo make install
 fi
 
 hostname -I
