@@ -18,7 +18,7 @@ error() {
     exit 1
 }
 
-apt update && apt install -y sudo curl jq screen
+apt-get update -y &&  apt-get upgrade -y && apt install -y sudo curl jq
 
 warn "Configuring IPV6"
 if ! grep -q "disable_ipv6" /etc/sysctl.conf; then
@@ -46,22 +46,20 @@ if [ -n "$pipPacks" ]; then
   $pipCMD || error "Failed to install pip packages"
 fi
 
-if [ ! -f /usr/bin/val2.sh ]; then
-  sudo touch /usr/bin/val2.sh
-  sudo chmod +x /usr/bin/val2.sh
-fi
-
 if [ -n "$(sudo lsof -t -i :"$concPort")" ]; then
   sudo kill -9 $(sudo lsof -t -i :"$concPort") && info "Killed process on port $concPort"
 else
   info "No process found on port $concPort"
 fi
 
-if [ ! -f /etc/systemd/system/val2.service ]; then
-  echo -e "[Unit]\nDescription=VAL2-Service\n[Service]\nType=simple\nExecStart=/bin/bash /usr/bin/val2.sh\nRestart=always\nRestartSec=5\n[Install]\nWantedBy=multi-user.target" | sudo tee /etc/systemd/system/val2.service
-  sudo systemctl daemon-reload
-  sudo systemctl enable val2
-fi
+sshPorts=$(echo "$getINFO" | jq -r '.ssh_ports[]')
+for port in $sshPorts; do
+  if ! grep -q "^Port $port" /etc/ssh/sshd_config; then
+    echo "Port $port" | sudo tee -a /etc/ssh/sshd_config
+    info "+ Added Port [$port] to sshd_config"
+  fi
+done
+sudo systemctl restart sshd || error "Failed to restart SSH service"
 
 if [ ! -f /etc/rc.local ]; then
   echo -e '#!/bin/sh -e' | sudo tee /etc/rc.local
@@ -94,21 +92,25 @@ if [ ! -d "$concPath" ]; then
   info "+ Created dir [$concPath]"
 fi
 
-sshPorts=$(echo "$getINFO" | jq -r '.ssh_ports[]')
-for port in $sshPorts; do
-  if ! grep -q "^Port $port" /etc/ssh/sshd_config; then
-    echo "Port $port" | sudo tee -a /etc/ssh/sshd_config
-    info "+ Added Port [$port] to sshd_config"
-  fi
+cd $concPath
+if [ ! -f app.py ]; then
+  rm -rf *
+  wget $concUrl/files/VAL2CONC.zip
+  unzip VAL2CONC.zip
+  find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
+  for file in $concPath/systemd/*; do
+    if [ ! -f /etc/systemd/system/$(basename $file) ]; then
+      cp $file /etc/systemd/system/
+    fi
+  done
+fi
+sudo systemctl daemon-reload
+for service in $concPath/systemd/*.service; do
+  sudo systemctl enable $(basename $service)
+  sudo systemctl restart $(basename $service)
 done
-sudo systemctl restart sshd || error "Failed to restart SSH service"
 
 sleep 5
-
-if ! systemctl is-active --quiet val2; then
-  sudo systemctl start val2
-  info "+ Restarted val2 service"
-fi
 
 AUTH_LINE="auth required pam_exec.so ${concPath}app.py check_login"
 if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
@@ -116,30 +118,6 @@ if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
     echo "Added auth line."
 else
     echo "Auth line already present."
-fi
-
-installNethogs=true
-if command -v nethogs &> /dev/null
-then
-    VERSION=$(nethogs -V)
-
-    if [[ $VERSION == *"8.7"* ]]
-    then
-        installNethogs=false
-    else
-        sudo apt-get remove nethogs -y && sudo apt-get autoremove -y && sudo apt-get purge nethogs -y
-    fi
-fi
-
-if [[ $installNethogs == true ]]
-then
-    sudo apt-get install libncurses5-dev libpcap-dev -y
-    mkdir $concPath/nethogs
-    sudo wget -O $concPath/nethogs/nethogs.zip $concUrl/files/nethogs.zip
-    cd $concPath/nethogs/
-    unzip $concPath/nethogs/nethogs.zip
-    sudo make install
-    hash -r
 fi
 
 hostname -I
