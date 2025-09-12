@@ -18,7 +18,7 @@ error() {
     exit 1
 }
 
-apt-get update -y &&  apt-get upgrade -y && apt install -y sudo curl jq
+apt-get update -y &&  apt-get upgrade -y && apt-get install -y sudo curl jq
 
 warn "Configuring IPV6"
 if ! grep -q "disable_ipv6" /etc/sysctl.conf; then
@@ -94,7 +94,7 @@ fi
 
 cd $concPath
 if [ ! -f app.py ]; then
-  rm -rf *
+  rm -rf "$concPath"/*
   wget $concUrl/files/VAL2CONC.zip
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
