@@ -52,6 +52,8 @@ else
   info "No process found on port $concPort"
 fi
 
+sudo ufw allow $concPort
+
 sshPorts=$(echo "$getINFO" | jq -r '.ssh_ports[]')
 for port in $sshPorts; do
   if ! grep -q "^Port $port" /etc/ssh/sshd_config; then
