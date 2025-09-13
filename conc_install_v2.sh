@@ -32,7 +32,7 @@ concPath=$(echo "$getINFO" | jq -r '.path')
 concUrl=$(echo "$getINFO" | jq -r '.url')
 concPort=$(echo "$getINFO" | jq -r ".conc_port")
 
-aptPacks=$(echo "$getINFO" | jq -r '."apt-get"[]' 2>/dev/null) || error "Failed to parse apt-get packages from JSON"
+aptPacks=$(echo "$getINFO" | jq -r '."apt"[]' 2>/dev/null) || error "Failed to parse apt packages from JSON"
 if [ -n "$aptPacks" ]; then
   aptCMD="sudo apt-get install -y $aptPacks"
   warn "$aptCMD"
