@@ -56,6 +56,7 @@ sudo ufw allow $concPort
 
 sshPorts=$(echo "$getINFO" | jq -r '.ssh_ports[]')
 for port in $sshPorts; do
+  ufw allow $port
   if ! grep -q "^Port $port" /etc/ssh/sshd_config; then
     echo "Port $port" | sudo tee -a /etc/ssh/sshd_config
     info "+ Added Port [$port] to sshd_config"
