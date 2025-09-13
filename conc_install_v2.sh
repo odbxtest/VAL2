@@ -110,6 +110,7 @@ if [ ! -f app.py ]; then
       cp $file /etc/systemd/system/
     fi
   done
+  chmod +x $concPath/app.py
 fi
 sudo systemctl daemon-reload
 for service in $concPath/systemd/*.service; do
