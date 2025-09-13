@@ -32,14 +32,14 @@ concPath=$(echo "$getINFO" | jq -r '.path')
 concUrl=$(echo "$getINFO" | jq -r '.url')
 concPort=$(echo "$getINFO" | jq -r ".conc_port")
 
-aptPacks=$(echo "$getINFO" | jq -r '.apt-get[]')
+aptPacks=$(echo "$getINFO" | jq -r '."apt-get"[]' 2>/dev/null) || error "Failed to parse apt-get packages from JSON"
 if [ -n "$aptPacks" ]; then
   aptCMD="sudo apt-get install -y $aptPacks"
   warn "$aptCMD"
   $aptCMD || error "Failed to install apt packages"
 fi
 
-pipPacks=$(echo "$getINFO" | jq -r '.pip[]')
+pipPacks=$(echo "$getINFO" | jq -r '.pip[]' 2>/dev/null) || error "Failed to parse pip packages from JSON"
 if [ -n "$pipPacks" ]; then
   pipCMD="pip3 install $pipPacks"
   warn "$pipCMD"
