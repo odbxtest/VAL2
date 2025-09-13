@@ -77,10 +77,7 @@ if [ ! -f /usr/bin/badvpn-udpgw ]; then
   if ! screen -list | grep -q "badvpn"; then
     sudo screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500
   fi
-  if ! grep -q "badvpn-udpgw" /etc/rc.local; then
-    sed -i '/exit 0/d' /etc/rc.local
-    echo -e '\nscreen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500\nexit 0' | sudo tee -a /etc/rc.local
-  fi
+
   info "+ badvpn-udpgw installed"
   warn "YOU MAY NEED TO REBOOT SERVER"
 else
@@ -89,6 +86,10 @@ else
     info "+ badvpn-udpgw restarted"
   fi
   warn "- badvpn-udpgw already exists"
+fi
+if ! grep -q "badvpn-udpgw" /etc/rc.local; then
+  sed -i '/exit 0/d' /etc/rc.local
+  echo -e '\nscreen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500\nscreen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500\nexit 0' | sudo tee -a /etc/rc.local
 fi
 
 if [ ! -d "$concPath" ]; then
