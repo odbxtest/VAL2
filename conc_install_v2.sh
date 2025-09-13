@@ -53,6 +53,8 @@ else
 fi
 
 sudo ufw allow $concPort
+sudo ufw allow 7300
+sudo ufw allow 7555
 
 sshPorts=$(echo "$getINFO" | jq -r '.ssh_ports[]')
 for port in $sshPorts; do
