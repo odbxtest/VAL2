@@ -72,24 +72,25 @@ if [ ! -f /etc/rc.local ]; then
 fi
 
 if [ ! -f /usr/bin/badvpn-udpgw ]; then
-  sudo curl -L -o /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/daybreakersx/premscript/master/badvpn-udpgw64"
-  sudo chmod +x /usr/bin/badvpn-udpgw
-  if ! screen -list | grep -q "badvpn"; then
-    sudo screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500
-  fi
-
-  info "+ badvpn-udpgw installed"
-  warn "YOU MAY NEED TO REBOOT SERVER"
+    curl -L -o /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/daybreakersx/premscript/master/badvpn-udpgw64" || { echo "Failed to download badvpn-udpgw"; }
+    chmod +x /usr/bin/badvpn-udpgw || { echo "Failed to set executable permissions"; }
+    if ! screen -list | grep -q "badvpn"; then
+        screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500 || { echo "Failed to start badvpn-udpgw"; }
+    fi
+    info "+ badvpn-udpgw installed"
+    warn "YOU MAY NEED TO REBOOT SERVER"
 else
-  if ! screen -list | grep -q "badvpn"; then
-    sudo screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500
-    info "+ badvpn-udpgw restarted"
-  fi
-  warn "- badvpn-udpgw already exists"
+    if ! screen -list | grep -q "badvpn"; then
+        screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500 || { echo "Failed to start badvpn-udpgw"; }
+        info "+ badvpn-udpgw restarted"
+    fi
+    warn "- badvpn-udpgw already exists"
 fi
-if ! grep -q "badvpn-udpgw" /etc/rc.local; then
-  sed -i '/exit 0/d' /etc/rc.local
-  echo -e '\nscreen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500\nscreen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500\nexit 0' | sudo tee -a /etc/rc.local
+
+if [ -f /etc/rc.local ] && ! grep -q "badvpn-udpgw" /etc/rc.local; then
+    cp /etc/rc.local /etc/rc.local.bak || { echo "Failed to backup rc.local"; }
+    sed -i '/exit 0/d' /etc/rc.local
+    echo -e '\nscreen -dmS badvpn7300 badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500\nscreen -dmS badvpn7555 badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500\nexit 0' >> /etc/rc.local || { echo "Failed to update rc.local"; }
 fi
 
 if [ ! -d "$concPath" ]; then
