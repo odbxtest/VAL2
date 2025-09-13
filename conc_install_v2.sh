@@ -115,7 +115,7 @@ done
 
 sleep 5
 
-AUTH_LINE="auth required pam_exec.so ${concPath}app.py check_login"
+AUTH_LINE="auth required pam_exec.so ${concPath}/app.py"
 if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
     sudo sed -i "/@include common-auth/i $AUTH_LINE" "/etc/pam.d/sshd"
     echo "Added auth line."
