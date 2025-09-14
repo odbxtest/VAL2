@@ -33,7 +33,7 @@ concUrl=$(echo "$getINFO" | jq -r '.url')
 concPort=$(echo "$getINFO" | jq -r ".conc_port")
 
 echo "Checking dpkg/lock-frontend"
-for i in 1 2 3 4 5; do
+for i in 1 2 3 4 5 5 6 7 8 9 10; do
     if fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; then
         warn "[$i/3] dpkg lock is active. Waiting 30s..."
         sleep 30
