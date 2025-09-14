@@ -66,32 +66,18 @@ for port in $sshPorts; do
 done
 sudo systemctl restart sshd || error "Failed to restart SSH service"
 
-if [ ! -f /etc/rc.local ]; then
-  echo -e '#!/bin/sh -e' | sudo tee /etc/rc.local
-  sudo chmod +x /etc/rc.local
-fi
-
 if [ ! -f /usr/bin/badvpn-udpgw ]; then
     curl -L -o /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/daybreakersx/premscript/master/badvpn-udpgw64" || { echo "Failed to download badvpn-udpgw"; }
     chmod +x /usr/bin/badvpn-udpgw || { echo "Failed to set executable permissions"; }
-    if ! screen -list | grep -q "badvpn"; then
-        screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500 || { echo "Failed to start badvpn-udpgw"; }
-    fi
     info "+ badvpn-udpgw installed"
-    warn "YOU MAY NEED TO REBOOT SERVER"
 else
-    if ! screen -list | grep -q "badvpn"; then
-        screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500 || { echo "Failed to start badvpn-udpgw"; }
-        info "+ badvpn-udpgw restarted"
-    fi
     warn "- badvpn-udpgw already exists"
 fi
 
-if [ -f /etc/rc.local ] && ! grep -q "badvpn-udpgw" /etc/rc.local; then
-    cp /etc/rc.local /etc/rc.local.bak || { echo "Failed to backup rc.local"; }
-    sed -i '/exit 0/d' /etc/rc.local
-    echo -e '\nscreen -dmS badvpn7300 badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500\nscreen -dmS badvpn7555 badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500\nexit 0' >> /etc/rc.local || { echo "Failed to update rc.local"; }
-fi
+CRON_JOB="@reboot screen -dmS badvpn7300 badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500"
+(crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
+CRON_JOB="@reboot screen -dmS badvpn7555 badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500"
+(crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
 
 if [ ! -d "$concPath" ]; then
   sudo mkdir -p "$concPath"
@@ -111,14 +97,15 @@ if [ ! -f app.py ]; then
     fi
   done
   chmod +x $concPath/app.py
+  chmod +x $concPath/trraficCalculator.py
+  sudo systemctl daemon-reload
+  for service in $concPath/systemd/*.service; do
+    sudo systemctl enable $(basename $service)
+    sudo systemctl start $(basename $service)
+  done
 fi
-sudo systemctl daemon-reload
-for service in $concPath/systemd/*.service; do
-  sudo systemctl enable $(basename $service)
-  sudo systemctl restart $(basename $service)
-done
 
-sleep 5
+warn "REBOOT SERVER NOW"
 
 # AUTH_LINE="auth required pam_exec.so ${concPath}/app.py"
 # if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
@@ -129,5 +116,16 @@ sleep 5
 # fi
 
 hostname -I
+
+echo "\n"
+info "Press Enter to reboot, or any other key to cancel."
+read -s -n1 key
+
+if [[ "$key" == "" ]]; then
+    info "Rebooting..."
+    sudo reboot
+else
+    info "Cancelled."
+fi
 
 exit 0
