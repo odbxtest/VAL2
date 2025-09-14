@@ -32,6 +32,29 @@ concPath=$(echo "$getINFO" | jq -r '.path')
 concUrl=$(echo "$getINFO" | jq -r '.url')
 concPort=$(echo "$getINFO" | jq -r ".conc_port")
 
+for i in 1 2 3 4 5 6; do
+    if fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; then
+        warn "[$i/3] dpkg lock is active. Waiting 10s..."
+        sleep 10
+    else
+        info "Lock is free. Proceed."
+    fi
+done
+
+if fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; then
+  warn "Lock still active after checks. Forcing removal..."
+  PID=$(fuser /var/lib/dpkg/lock-frontend 2>/dev/null)
+  if [ -n "$PID" ]; then
+    echo "Killing process $PID holding the lock..."
+    sudo kill -9 $PID
+  fi
+  echo "Removing lock file..."
+  sudo rm -f /var/lib/dpkg/lock-frontend
+  echo "Reconfiguring dpkg..."
+  sudo dpkg --configure -a
+  info "Done. Lock forcibly released."
+fi
+
 aptPacks=$(echo "$getINFO" | jq -r '."apt"[]' 2>/dev/null) || error "Failed to parse apt packages from JSON"
 if [ -n "$aptPacks" ]; then
   aptCMD="sudo apt-get install -y $aptPacks"
