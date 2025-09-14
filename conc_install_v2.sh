@@ -116,16 +116,18 @@ warn "REBOOT SERVER NOW"
 # fi
 
 hostname -I
-
 echo "\n"
-info "Press Enter to reboot, or any other key to cancel."
-read -s -n1 key
+info "Rebooting..."
+sudo reboot
 
-if [[ "$key" == "" ]]; then
-    info "Rebooting..."
-    sudo reboot
-else
-    info "Cancelled."
-fi
+# info "Press Enter to reboot, or any other key to cancel."
+# read -s -n1 key
+
+# if [[ "$key" == "" ]]; then
+#     info "Rebooting..."
+#     sudo reboot
+# else
+#     info "Cancelled."
+# fi
 
 exit 0
