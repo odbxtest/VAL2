@@ -18,13 +18,18 @@ error() {
     exit 1
 }
 
-echo "Checking dpkg/lock-frontend"
-for i in 1 2 3 4 5 5 6 7 8 9 10; do
-    if fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; then
-        warn "[$i/3] dpkg lock is active. Waiting 30s..."
-        sleep 60
+echo "Checking dpkg/apt locks"
+for i in $(seq 1 10); do
+    if fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 \
+       || fuser /var/lib/dpkg/lock >/dev/null 2>&1 \
+       || pgrep -x apt >/dev/null \
+       || pgrep -x apt-get >/dev/null \
+       || pgrep -x dpkg >/dev/null \
+       || pgrep -x unattended-upgrade >/dev/null; then
+        echo "[$i/10] Lock/process active. Waiting 30s..."
+        sleep 30
     else
-        info "Lock is free. Proceed."
+        echo "Lock is free. Proceed."
         break
     fi
 done
