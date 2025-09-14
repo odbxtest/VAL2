@@ -18,30 +18,38 @@ error() {
     exit 1
 }
 
-echo "Checking dpkg/apt locks"
-for i in $(seq 1 10); do
+
+apt_wait() {
+  info "Checking dpkg/apt locks"
+  # wait up to 10 minutes, checking every 5s
+  for i in $(seq 1 120); do
     if fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 \
        || fuser /var/lib/dpkg/lock >/dev/null 2>&1 \
        || pgrep -x apt >/dev/null \
        || pgrep -x apt-get >/dev/null \
        || pgrep -x dpkg >/dev/null \
        || pgrep -x unattended-upgrade >/dev/null; then
-        echo "[$i/10] Lock/process active. Waiting 30s..."
-        sleep 30
+      warn "[$i/120] lock/process active; waiting 5s..."
+      sleep 5
     else
-        echo "Lock is free. Proceed."
-        break
+      info "Lock is free. Proceed."
+      return 0
     fi
-done
+  done
+  return 1
+}
 
+apt_wait
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -q update
 
+apt_wait
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y -q \
     -o Dpkg::Options::="--force-confdef" \
     -o Dpkg::Options::="--force-confold" \
     upgrade
 
+apt_wait
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y -q \
     -o Dpkg::Options::="--force-confdef" \
@@ -60,6 +68,7 @@ concPath=$(echo "$getINFO" | jq -r '.path')
 concUrl=$(echo "$getINFO" | jq -r '.url')
 concPort=$(echo "$getINFO" | jq -r ".conc_port")
 
+apt_wait
 aptPacks=$(echo "$getINFO" | jq -r '."apt"[]' 2>/dev/null) || error "Failed to parse apt packages from JSON"
 if [ -n "$aptPacks" ]; then
   sudo DEBIAN_FRONTEND=noninteractive \
@@ -69,6 +78,7 @@ if [ -n "$aptPacks" ]; then
     install $aptPacks || error "Failed to install apt packages"
 fi
 
+apt_wait
 pipPacks=$(echo "$getINFO" | jq -r '.pip[]' 2>/dev/null) || error "Failed to parse pip packages from JSON"
 if [ -n "$pipPacks" ]; then
   pipCMD="pip3 install $pipPacks"
@@ -142,6 +152,7 @@ rm -r /root/val2
 rm -r $concPath
 # -----------------------
 
+apt_wait
 if [ ! -d "$concPath" ]; then
   sudo mkdir -p "$concPath"
   sudo chmod 755 "$concPath"
