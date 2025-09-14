@@ -134,7 +134,7 @@ warn "REBOOT SERVER"
 # fi
 
 hostname -I
-echo "\n"
+echo ""
 info "Press Enter to reboot, or any other key to cancel."
 read -s -n1 key
 
