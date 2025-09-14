@@ -20,8 +20,7 @@ error() {
 
 
 apt_wait() {
-  info "Checking dpkg/apt locks"
-  # wait up to 10 minutes, checking every 5s
+  echo "Checking dpkg/apt locks"
   for i in $(seq 1 120); do
     if fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 \
        || fuser /var/lib/dpkg/lock >/dev/null 2>&1 \
@@ -32,7 +31,7 @@ apt_wait() {
       warn "[$i/120] lock/process active; waiting 5s..."
       sleep 5
     else
-      info "Lock is free. Proceed."
+      echo "Lock is free. Proceed."
       return 0
     fi
   done
