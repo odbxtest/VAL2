@@ -18,6 +18,17 @@ error() {
     exit 1
 }
 
+echo "Checking dpkg/lock-frontend"
+for i in 1 2 3 4 5 5 6 7 8 9 10; do
+    if fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; then
+        warn "[$i/3] dpkg lock is active. Waiting 30s..."
+        sleep 60
+    else
+        info "Lock is free. Proceed."
+        break
+    fi
+done
+
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -q update
 
 sudo DEBIAN_FRONTEND=noninteractive \
@@ -43,17 +54,6 @@ getINFO=$(curl -s --connect-timeout 10 'https://raw.githubusercontent.com/odbxte
 concPath=$(echo "$getINFO" | jq -r '.path')
 concUrl=$(echo "$getINFO" | jq -r '.url')
 concPort=$(echo "$getINFO" | jq -r ".conc_port")
-
-echo "Checking dpkg/lock-frontend"
-for i in 1 2 3 4 5 5 6 7 8 9 10; do
-    if fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; then
-        warn "[$i/3] dpkg lock is active. Waiting 30s..."
-        sleep 60
-    else
-        info "Lock is free. Proceed."
-        break
-    fi
-done
 
 aptPacks=$(echo "$getINFO" | jq -r '."apt"[]' 2>/dev/null) || error "Failed to parse apt packages from JSON"
 if [ -n "$aptPacks" ]; then
