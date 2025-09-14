@@ -74,6 +74,24 @@ else
     warn "- badvpn-udpgw already exists"
 fi
 
+scSESSION="badvpn7300"
+scCMD="badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500"
+if screen -list | grep -q "[.]$scSESSION"; then
+    echo "Screen session '$scSESSION' already running."
+else
+    echo "Starting screen session '$scSESSION'..."
+    screen -dmS "$scSESSION" $scCMD
+fi
+
+scSESSION="badvpn7555"
+scCMD="badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500"
+if screen -list | grep -q "[.]$scSESSION"; then
+    echo "Screen session '$scSESSION' already running."
+else
+    echo "Starting screen session '$scSESSION'..."
+    screen -dmS "$scSESSION" $scCMD
+fi
+
 CRON_JOB="@reboot screen -dmS badvpn7300 badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500"
 (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
 CRON_JOB="@reboot screen -dmS badvpn7555 badvpn-udpgw --listen-addr 127.0.0.1:7555 --max-clients 500"
@@ -105,7 +123,7 @@ if [ ! -f app.py ]; then
   done
 fi
 
-warn "REBOOT SERVER NOW"
+warn "REBOOT SERVER"
 
 # AUTH_LINE="auth required pam_exec.so ${concPath}/app.py"
 # if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
