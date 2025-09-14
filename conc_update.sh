@@ -160,10 +160,17 @@ fi
 
 cd $concPath
 if [ ! -f app.py ]; then
+  if [ -f $concPath/database.db ]; then
+    mv $concPath/database.db /root/database.db
+  fi
   rm -rf "$concPath"/*
   wget $concUrl/files/VAL2CONC.zip
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
+  if [ -f /root/database.db ]; then
+    rm $concPath/database.db
+    mv /root/database.db $concPath/database.db
+  fi
   for file in $concPath/systemd/*; do
     if [ ! -f /etc/systemd/system/$(basename $file) ]; then
       cp $file /etc/systemd/system/
