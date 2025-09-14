@@ -161,6 +161,7 @@ fi
 cd $concPath
 if [ ! -f app.py ]; then
   if [ -f $concPath/database.db ]; then
+    warn "Saving database file."
     mv $concPath/database.db /root/database.db
   fi
   rm -rf "$concPath"/*
@@ -168,6 +169,7 @@ if [ ! -f app.py ]; then
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
   if [ -f /root/database.db ]; then
+    warn "Restoring database file."
     rm $concPath/database.db
     mv /root/database.db $concPath/database.db
   fi
