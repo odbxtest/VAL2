@@ -201,7 +201,8 @@ warn "REBOOT SERVER"
 
 hostname -I
 echo ""
-warn "do a reboot"
+
+# warn "do a reboot? "
 # read -s -n1 key
 
 # if [[ "$key" == "" ]]; then
