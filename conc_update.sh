@@ -18,7 +18,19 @@ error() {
     exit 1
 }
 
-apt-get update -y &&  apt-get upgrade -y && apt-get install -y sudo curl jq
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y -q update
+
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get -y -q \
+    -o Dpkg::Options::="--force-confdef" \
+    -o Dpkg::Options::="--force-confold" \
+    upgrade
+
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get -y -q \
+    -o Dpkg::Options::="--force-confdef" \
+    -o Dpkg::Options::="--force-confold" \
+    install sudo curl jq
 
 warn "Configuring IPV6"
 if ! grep -q "disable_ipv6" /etc/sysctl.conf; then
@@ -45,9 +57,11 @@ done
 
 aptPacks=$(echo "$getINFO" | jq -r '."apt"[]' 2>/dev/null) || error "Failed to parse apt packages from JSON"
 if [ -n "$aptPacks" ]; then
-  aptCMD="sudo apt-get install -y $aptPacks"
-  warn "$aptCMD"
-  $aptCMD || error "Failed to install apt packages"
+  sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get -y -q \
+    -o Dpkg::Options::="--force-confdef" \
+    -o Dpkg::Options::="--force-confold" \
+    install $aptPacks || error "Failed to install apt packages"
 fi
 
 pipPacks=$(echo "$getINFO" | jq -r '.pip[]' 2>/dev/null) || error "Failed to parse pip packages from JSON"
