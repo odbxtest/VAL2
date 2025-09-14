@@ -178,14 +178,14 @@ warn "REBOOT SERVER"
 
 hostname -I
 echo ""
-info "Press Enter to reboot, or any other key to cancel."
-read -s -n1 key
+info "do a reboot"
+# read -s -n1 key
 
-if [[ "$key" == "" ]]; then
-    info "Rebooting..."
-    sudo reboot
-else
-    info "Cancelled."
-fi
+# if [[ "$key" == "" ]]; then
+#     info "Rebooting..."
+#     sudo reboot
+# else
+#     info "Cancelled."
+# fi
 
 exit 0
