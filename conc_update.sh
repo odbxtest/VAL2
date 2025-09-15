@@ -139,13 +139,13 @@ CRON_JOB="@reboot screen -dmS badvpn7555 badvpn-udpgw --listen-addr 127.0.0.1:75
 # -----------------------
 systemctl stop val2.service
 systemctl stop concApp.service
-systemctl stop concTrraficCalculator.service
+systemctl stop concTrafficCalculator.service
 systemctl disable val2.service
 systemctl disable concApp.service
-systemctl disable concTrraficCalculator.service
+systemctl disable concTrafficCalculator.service
 rm /etc/systemd/system/val2.service
 rm /etc/systemd/system/concApp.service
-rm /etc/systemd/system/concTrraficCalculator.service
+rm /etc/systemd/system/concTrafficCalculator.service
 rm /usr/bin/val2.sh
 rm -r /root/val2
 rm -r $concPath
@@ -179,7 +179,7 @@ if [ ! -f app.py ]; then
     fi
   done
   chmod +x $concPath/app.py
-  chmod +x $concPath/trraficCalculator.py
+  chmod +x $concPath/trafficCalculator.py
   sudo systemctl daemon-reload
   for service in $concPath/systemd/*.service; do
     sudo systemctl enable $(basename $service)
