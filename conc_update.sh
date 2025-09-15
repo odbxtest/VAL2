@@ -152,6 +152,13 @@ rm -r $concPath
 # -----------------------
 
 apt_wait
+
+if [ -n "$(sudo lsof -t -i :"$concPort")" ]; then
+  sudo kill -9 $(sudo lsof -t -i :"$concPort") && info "Killed process on port $concPort"
+else
+  info "No process found on port $concPort"
+fi
+
 if [ ! -d "$concPath" ]; then
   sudo mkdir -p "$concPath"
   sudo chmod 755 "$concPath"
