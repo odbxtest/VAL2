@@ -167,18 +167,19 @@ fi
 
 cd $concPath
 if [ ! -f app.py ]; then
-  if [ -f $concPath/database.db ]; then
+  concDBfile=$(echo "$getINFO" | jq -r ".database")
+  if [ -f $concPath/$concDBfile ]; then
     warn "Saving database file."
-    mv $concPath/database.db /root/database.db
+    mv $concPath/$concDBfile /root/$concDBfile
   fi
   rm -rf "$concPath"/*
   wget $concUrl/files/VAL2CONC.zip
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
-  if [ -f /root/database.db ]; then
+  if [ -f /root/$concDBfile ]; then
     warn "Restoring database file."
-    rm $concPath/database.db
-    mv /root/database.db $concPath/database.db
+    rm $concPath/$concDBfile
+    mv /root/$concDBfile $concPath/$concDBfile
   fi
   for file in $concPath/systemd/*; do
     if [ ! -f /etc/systemd/system/$(basename $file) ]; then
