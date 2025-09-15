@@ -148,6 +148,11 @@ rm /etc/systemd/system/concApp.service
 rm /etc/systemd/system/concTrafficCalculator.service
 rm /usr/bin/val2.sh
 rm -r /root/val2
+concDBfile=$(echo "$getINFO" | jq -r ".database")
+if [ -f $concPath/$concDBfile ]; then
+  warn "Saving database file."
+  mv $concPath/$concDBfile /root/$concDBfile
+fi
 rm -r $concPath
 # -----------------------
 
@@ -167,11 +172,6 @@ fi
 
 cd $concPath
 if [ ! -f app.py ]; then
-  concDBfile=$(echo "$getINFO" | jq -r ".database")
-  if [ -f $concPath/$concDBfile ]; then
-    warn "Saving database file."
-    mv $concPath/$concDBfile /root/$concDBfile
-  fi
   rm -rf "$concPath"/*
   wget $concUrl/files/VAL2CONC.zip
   unzip VAL2CONC.zip
