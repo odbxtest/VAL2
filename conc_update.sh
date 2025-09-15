@@ -148,7 +148,7 @@ rm /etc/systemd/system/concApp.service
 rm /etc/systemd/system/concTrafficCalculator.service
 rm /usr/bin/val2.sh
 rm -r /root/val2
-rm $concPath/$concDBfile
+# rm $concPath/$concDBfile
 concDBfile=$(echo "$getINFO" | jq -r ".database")
 if [ -f $concPath/$concDBfile ]; then
   warn "Saving database file."
