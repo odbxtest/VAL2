@@ -1,50 +1,106 @@
 {
-    "settings": {
-        "excludeUsers": ["root", "RevenTEST"]
-    },
-    "database": {
-        "accounts": {
-            "main_column": "username",
-            "columns": {
-                "username": "NULL UNIQUE",
-                "online_limit": "1",
-                "traffic_limit": "0",
-                "traffic_download": "0",
-                "traffic_upload": "0",
-                "temp": "NULL",
-                "reg_date": "NULL"
-            }
+  "settings": {
+    "excludeUsers": [
+      "root",
+      "RevenTEST"
+    ]
+  },
+  "wireguard": {
+    "config": {
+      "interface": {
+        "Address": "",
+        "DNS": [
+          "1.1.1.1",
+          "1.0.0.1"
+        ],
+        "MTU": 1420,
+        "Jc": 4,
+        "Jmin": 40,
+        "Jmax": 70,
+        "H1": 1,
+        "H2": 2,
+        "H3": 3,
+        "H4": 4,
+        "PrivateKey": ""
+      },
+      "peers": [
+        {
+          "AllowedIPs": [
+            "0.0.0.0/0",
+            "::/0"
+          ],
+          "Endpoint": "",
+          "PublicKey": ""
         }
+      ]
     },
-    "github": {
-        "url": "http://conc.val2.valdomusic.com",
-        "conc_port": "10099",
-        "online_limit_check": true,
-        "path": "/root/VAL2CONC",
-        "database": "accounts.db",
-        "ssh_ports": [
-            "22",
-            "6985",
-            "771"
+    "inbound": {
+      "allocate": {
+        "concurrency": 3,
+        "refresh": 5,
+        "strategy": "always"
+      },
+      "listen": null,
+      "port": 0,
+      "protocol": "wireguard",
+      "settings": {
+        "mtu": 1420,
+        "noKernelTun": false,
+        "peers": [
+          {
+            "allowedIPs": [],
+            "keepAlive": 0,
+            "privateKey": "",
+            "publicKey": ""
+          }
         ],
-        "apt-get": [
-            "build-essential",
-            "sudo",
-            "jq",
-            "python3-pip",
-            "curl",
-            "openssl",
-            "screen",
-            "iptables",
-            "cron",
-            "wget",
-            "nano",
-            "zip",
-            "unzip",
-            "make"
+        "secretKey": ""
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
         ],
-        "pip": [
-            "requests"
-        ]
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": null,
+      "tag": ""
     }
+  },
+  "github": {
+    "url": "http://conc.val2.valdomusic.com",
+    "conc_port": "10099",
+    "online_limit_check": true,
+    "traffic_calculator": false,
+    "path": "/root/VAL2CONC",
+    "database": "accounts.db",
+    "ssh_ports": [
+      "22",
+      "6985",
+      "771"
+    ],
+    "apt-get": [
+      "build-essential",
+      "sudo",
+      "jq",
+      "python3-pip",
+      "curl",
+      "openssl",
+      "screen",
+      "iptables",
+      "cron",
+      "wget",
+      "nano",
+      "zip",
+      "unzip",
+      "make"
+    ],
+    "pip": [
+      "requests"
+    ]
+  }
 }
