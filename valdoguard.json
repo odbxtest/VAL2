@@ -1,0 +1,106 @@
+{
+  "api": {
+    "services": ["HandlerService", "LoggerService", "StatsService"],
+    "tag": "api",
+    "listen": "127.0.0.1:8088"
+  },
+  "burstObservatory": null,
+  "dns": null,
+  "fakedns": null,
+  "inbounds": [
+      {
+      "allocate": {
+        "concurrency": 3,
+        "refresh": 5,
+        "strategy": "always"
+      },
+      "listen": null,
+      "port": 30001,
+      "protocol": "wireguard",
+      "settings": {
+        "mtu": 1420,
+        "noKernelTun": false,
+        "peers": [
+          {
+            "allowedIPs": [
+              "10.0.0.2/32"
+            ],
+            "keepAlive": 0,
+            "privateKey": "4HEEkEl1bAEFqaQzZkzme4awsTVItXsTqwnpLvVzSmU=",
+            "publicKey": "H4+YET5BYdGKJgR4CGloTWHSeyRBQlp3CoGw7TaL5nU="
+          }
+        ],
+        "secretKey": "oMbO7L42c6kAlU2NmdgnKvbBLxUVnr9S4EcRpCheaWk="
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": false,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": null,
+      "tag": "wg30001"
+    }
+  ],
+  "log": {
+    "access": "",
+    "dnsLog": false,
+    "error": "",
+    "loglevel": "warning",
+    "maskAddress": ""
+  },
+  "observatory": null,
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "AsIs",
+        "noises": [],
+        "redirect": ""
+      },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    }
+  ],
+  "policy": {
+    "levels": {
+      "0": {
+        "statsUserDownlink": true,
+        "statsUserUplink": true
+      }
+    },
+    "system": {
+      "statsInboundDownlink": true,
+      "statsInboundUplink": true,
+      "statsOutboundDownlink": false,
+      "statsOutboundUplink": false
+    }
+  },
+  "reverse": null,
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "inboundTag": ["api"],
+        "outboundTag": "api",
+        "type": "field"
+      },
+      {
+        "outboundTag": "blocked",
+        "protocol": ["bittorrent"],
+        "type": "field"
+      }
+    ]
+  },
+  "stats": {},
+  "transport": null
+}
