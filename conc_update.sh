@@ -158,7 +158,7 @@ rm -r $concPath
 # -----------------------
 
 apt_wait
-
+ufw disable
 if [ -n "$(sudo lsof -t -i :"$concPort")" ]; then
   sudo kill -9 $(sudo lsof -t -i :"$concPort") && info "Killed process on port $concPort"
 else
@@ -174,6 +174,20 @@ fi
 cd $concPath
 if [ ! -f app.py ]; then
   rm -rf "$concPath"/*
+
+  wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
+  unzip Xray-linux-64.zip -d /tmp/xray
+  install -m 755 /tmp/xray/xray /usr/local/bin/valdoguard
+  rm -rf /tmp/xray Xray-linux-64.zip
+  
+  mkdir $concPath/valdoguard
+  touch $concPath/valdoguard/valdoguard.json
+  chmod 644 $concPath/valdoguard/valdoguard.json
+  mkdir -p $concPath/valdoguard/configs
+  chmod 755 $concPath/valdoguard/configs
+  chown root:root $concPath/valdoguard/valdoguard.json
+  chmod 644 $concPath/valdoguard/valdoguard.json
+  
   wget $concUrl/files/VAL2CONC.zip
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
@@ -189,6 +203,7 @@ if [ ! -f app.py ]; then
   done
   chmod +x $concPath/app.py
   chmod +x $concPath/trafficCalculator.py
+  chmod +x $concPath/sessionCalculator.py
   sudo systemctl daemon-reload
   for service in $concPath/systemd/*.service; do
     sudo systemctl enable $(basename $service)
@@ -199,8 +214,6 @@ fi
 for service in $concPath/systemd/*.service; do
   sudo systemctl restart $(basename $service)
 done
-
-warn "REBOOT SERVER"
 
 # AUTH_LINE="auth required pam_exec.so ${concPath}/app.py"
 # if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
