@@ -181,7 +181,7 @@ if [ ! -f app.py ]; then
   rm -rf /tmp/xray Xray-linux-64.zip
   
   mkdir $concPath/valdoguard
-  touch $concPath/valdoguard/valdoguard.json
+  wget -O $concPath/valdoguard/valdoguard.json https://raw.githubusercontent.com/odbxtest/VAL2/main/valdoguard.json
   chmod 644 $concPath/valdoguard/valdoguard.json
   mkdir -p $concPath/valdoguard/configs
   chmod 755 $concPath/valdoguard/configs
