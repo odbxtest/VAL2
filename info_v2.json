@@ -1,7 +1,7 @@
 {
   "url":"http://conc.val2.valdomusic.com",
   "conc_port":"10099",
-  "online_limit_check":true,
+  "online_limit_check":false,
   "traffic_calculator":false,
   "path":"/root/VAL2CONC",
   "ssh_ports":["22","6985","771"],
