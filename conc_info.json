@@ -46,7 +46,7 @@
             "settings": {
                 "mtu": 1420,
                 "noKernelTun": false,
-                "peer": [
+                "peers": [
                     {
                         "allowedIPs": [],
                         "keepAlive": 0,
