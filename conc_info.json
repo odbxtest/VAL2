@@ -23,7 +23,7 @@
                 "H4": 4,
                 "PrivateKey": ""
             },
-            "peers": [
+            "peer": [
                 {
                     "AllowedIPs": [
                         "0.0.0.0/0",
@@ -46,7 +46,7 @@
             "settings": {
                 "mtu": 1420,
                 "noKernelTun": false,
-                "peers": [
+                "peer": [
                     {
                         "allowedIPs": [],
                         "keepAlive": 0,
