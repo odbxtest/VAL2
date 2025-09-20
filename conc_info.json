@@ -1,106 +1,107 @@
 {
-  "settings": {
-    "excludeUsers": [
-      "root",
-      "RevenTEST"
-    ]
-  },
-  "wireguard": {
-    "config": {
-      "interface": {
-        "Address": "",
-        "DNS": [
-          "1.1.1.1",
-          "1.0.0.1"
-        ],
-        "MTU": 1420,
-        "Jc": 4,
-        "Jmin": 40,
-        "Jmax": 70,
-        "H1": 1,
-        "H2": 2,
-        "H3": 3,
-        "H4": 4,
-        "PrivateKey": ""
-      },
-      "peers": [
-        {
-          "AllowedIPs": [
-            "0.0.0.0/0",
-            "::/0"
-          ],
-          "Endpoint": "",
-          "PublicKey": ""
-        }
-      ]
+    "settings": {
+        "excludeUsers": [
+            "root",
+            "RevenTEST"
+        ]
     },
-    "inbound": {
-      "allocate": {
-        "concurrency": 3,
-        "refresh": 5,
-        "strategy": "always"
-      },
-      "listen": null,
-      "port": 0,
-      "protocol": "wireguard",
-      "settings": {
-        "mtu": 1420,
-        "noKernelTun": false,
-        "peers": [
-          {
-            "allowedIPs": [],
-            "keepAlive": 0,
-            "privateKey": "",
-            "publicKey": ""
-          }
+    "wireguard": {
+        "config": {
+            "interface": {
+                "Address": "",
+                "DNS": [
+                    "1.1.1.1",
+                    "1.0.0.1"
+                ],
+                "MTU": 1420,
+                "Jc": 4,
+                "Jmin": 40,
+                "Jmax": 70,
+                "H1": 1,
+                "H2": 2,
+                "H3": 3,
+                "H4": 4,
+                "PrivateKey": ""
+            },
+            "peers": [
+                {
+                    "AllowedIPs": [
+                        "0.0.0.0/0",
+                        "::/0"
+                    ],
+                    "Endpoint": "",
+                    "PublicKey": ""
+                }
+            ]
+        },
+        "inbound": {
+            "allocate": {
+                "concurrency": 3,
+                "refresh": 5,
+                "strategy": "always"
+            },
+            "listen": null,
+            "port": 0,
+            "protocol": "wireguard",
+            "settings": {
+                "mtu": 1420,
+                "noKernelTun": false,
+                "peers": [
+                    {
+                        "allowedIPs": [],
+                        "keepAlive": 0,
+                        "privateKey": "",
+                        "publicKey": ""
+                    }
+                ],
+                "secretKey": ""
+            },
+            "sniffing": {
+                "destOverride": [
+                    "http",
+                    "tls",
+                    "quic",
+                    "fakedns"
+                ],
+                "enabled": true,
+                "metadataOnly": false,
+                "routeOnly": false
+            },
+            "streamSettings": null,
+            "tag": ""
+        }
+    },
+    "github": {
+        "url": "http://conc.val2.valdomusic.com",
+        "conc_port": "10099",
+        "online_limit_check": false,
+        "traffic_calculator": false,
+        "path": "/root/VAL2CONC",
+        "ssh_ports": [
+            "22",
+            "6985",
+            "771"
         ],
-        "secretKey": ""
-      },
-      "sniffing": {
-        "destOverride": [
-          "http",
-          "tls",
-          "quic",
-          "fakedns"
+        "apt": [
+            "build-essential",
+            "sudo",
+            "jq",
+            "lsof",
+            "python3-pip",
+            "curl",
+            "openssl",
+            "screen",
+            "iptables",
+            "cron",
+            "wget",
+            "nano",
+            "zip",
+            "unzip",
+            "make"
         ],
-        "enabled": true,
-        "metadataOnly": false,
-        "routeOnly": false
-      },
-      "streamSettings": null,
-      "tag": ""
+        "pip": [
+            "requests",
+            "cryptography"
+        ]
     }
-  },
-  "github": {
-    "url": "http://conc.val2.valdomusic.com",
-    "conc_port": "10099",
-    "online_limit_check": true,
-    "traffic_calculator": false,
-    "path": "/root/VAL2CONC",
-    "database": "accounts.db",
-    "ssh_ports": [
-      "22",
-      "6985",
-      "771"
-    ],
-    "apt-get": [
-      "build-essential",
-      "sudo",
-      "jq",
-      "python3-pip",
-      "curl",
-      "openssl",
-      "screen",
-      "iptables",
-      "cron",
-      "wget",
-      "nano",
-      "zip",
-      "unzip",
-      "make"
-    ],
-    "pip": [
-      "requests"
-    ]
-  }
 }
