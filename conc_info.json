@@ -23,7 +23,7 @@
                 "H4": 4,
                 "PrivateKey": ""
             },
-            "peer": [
+            "peers": [
                 {
                     "AllowedIPs": [
                         "0.0.0.0/0",
