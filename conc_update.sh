@@ -171,15 +171,17 @@ if [ ! -d "$concPath" ]; then
   info "+ Created dir [$concPath]"
 fi
 
-cd $concPath
-if [ ! -f app.py ]; then
-  rm -rf "$concPath"/*
-
+if [ ! -f /usr/local/bin/valdoguard ]; then
   wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
   unzip Xray-linux-64.zip -d /tmp/xray
   install -m 755 /tmp/xray/xray /usr/local/bin/valdoguard
   rm -rf /tmp/xray Xray-linux-64.zip
-  
+fi
+
+cd $concPath
+if [ ! -f app.py ]; then
+  rm -rf "$concPath"/*
+
   mkdir $concPath/valdoguard
   wget -O $concPath/valdoguard/valdoguard.json https://raw.githubusercontent.com/odbxtest/VAL2/main/valdoguard.json
   chmod 644 $concPath/valdoguard/valdoguard.json
