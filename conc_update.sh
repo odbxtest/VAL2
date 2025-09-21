@@ -150,12 +150,14 @@ rm /etc/systemd/system/concApp.service
 
 rm /usr/bin/val2.sh
 rm -r /root/val2
+
 # rm $concPath/$concDBfile
-concDBfile=$(echo "$getINFO" | jq -r ".database")
-if [ -f $concPath/$concDBfile ]; then
-  warn "Saving database file."
-  mv $concPath/$concDBfile /root/$concDBfile
-fi
+# concDBfile=$(echo "$getINFO" | jq -r ".database")
+# if [ -f $concPath/$concDBfile ]; then
+#   warn "Saving database file."
+#   mv $concPath/$concDBfile /root/$concDBfile
+# fi
+
 rm -r $concPath
 # -----------------------
 
@@ -217,15 +219,27 @@ if [ ! -f app.py ]; then
   done
   chmod +x $concPath/app.py
   chmod +x $concPath/*.sh
+  
   sudo systemctl daemon-reload
-  for service in $concPath/systemd/*.service; do
-    sudo systemctl enable $(basename $service)
-    sudo systemctl start $(basename $service)
-  done
+  # for service in $concPath/systemd/*.service; do
+  #   sudo systemctl enable $(basename $service)
+  #   sudo systemctl start $(basename $service)
+  # done
 fi
 
-for service in $concPath/systemd/*.service; do
-  sudo systemctl restart $(basename $service)
+services=("valdoguard", "concApp", "wgOnline")
+for service in "${services[@]}"; do
+    echo "🔧 Managing service: $service"
+
+    sudo systemctl enable "$service"
+
+    if systemctl is-active --quiet "$service"; then
+        echo "↻ Restarting $service (already running)"
+        sudo systemctl restart "$service"
+    else
+        echo "▶️ Starting $service"
+        sudo systemctl start "$service"
+    fi
 done
 
 # AUTH_LINE="auth required pam_exec.so ${concPath}/app.py"
