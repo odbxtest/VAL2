@@ -243,6 +243,9 @@ for service in "${services[@]}"; do
     fi
 done
 
+CRON_JOB="0 * * * * /usr/bin/systemctl restart concApp >/dev/null 2>&1"
+(crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
+
 # AUTH_LINE="auth required pam_exec.so ${concPath}/app.py"
 # if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
 #     sudo sed -i "/@include common-auth/i $AUTH_LINE" "/etc/pam.d/sshd"
