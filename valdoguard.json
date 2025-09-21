@@ -1,10 +1,6 @@
 {
   "api": {
-    "services": [
-      "HandlerService",
-      "LoggerService",
-      "StatsService"
-    ],
+    "services": ["HandlerService", "LoggerService", "StatsService"],
     "tag": "api",
     "listen": "127.0.0.1:8088"
   },
@@ -12,7 +8,7 @@
   "dns": null,
   "fakedns": null,
   "inbounds": [
-    {
+      {
       "allocate": {
         "concurrency": 3,
         "refresh": 5,
@@ -23,11 +19,11 @@
       "protocol": "wireguard",
       "settings": {
         "mtu": 1420,
-        "noKernelTun": true,
+        "noKernelTun": false,
         "peers": [
           {
             "allowedIPs": [
-              "10.0.0.3/32"
+              "10.0.0.2/32"
             ],
             "keepAlive": 0,
             "privateKey": "oGy33uMOLxHWdeGaYgVHE8tYNBly2D4H1GTypqEYIm0=",
@@ -43,7 +39,7 @@
           "quic",
           "fakedns"
         ],
-        "enabled": true,
+        "enabled": false,
         "metadataOnly": false,
         "routeOnly": false
       },
@@ -94,17 +90,13 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "inboundTag": [
-          "api"
-        ],
+        "inboundTag": ["api"],
         "outboundTag": "api",
         "type": "field"
       },
       {
         "outboundTag": "blocked",
-        "protocol": [
-          "bittorrent"
-        ],
+        "protocol": ["bittorrent"],
         "type": "field"
       }
     ]
