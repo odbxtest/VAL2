@@ -1,13 +1,56 @@
 {
   "api": {
-    "services": ["HandlerService", "LoggerService", "StatsService"],
+    "services": [
+      "HandlerService",
+      "LoggerService",
+      "StatsService"
+    ],
     "tag": "api",
     "listen": "127.0.0.1:8088"
   },
   "burstObservatory": null,
   "dns": null,
   "fakedns": null,
-  "inbounds": [],
+  "inbounds": [
+    {
+      "allocate": {
+        "concurrency": 3,
+        "refresh": 5,
+        "strategy": "always"
+      },
+      "listen": null,
+      "port": 30000,
+      "protocol": "wireguard",
+      "settings": {
+        "mtu": 1420,
+        "noKernelTun": true,
+        "peers": [
+          {
+            "allowedIPs": [
+              "10.0.0.3/32"
+            ],
+            "keepAlive": 0,
+            "privateKey": "oGy33uMOLxHWdeGaYgVHE8tYNBly2D4H1GTypqEYIm0=",
+            "publicKey": "MlUwic8dsFcKjk1TCov2R/2Nye8/V67JJdpRNYY85DE="
+          }
+        ],
+        "secretKey": "WDcrRkhk/HasjxaTjCor4QR5VdcciWqAiLUzp/w0G0k="
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": null,
+      "tag": "wg_RevenTEST"
+    }
+  ],
   "log": {
     "access": "",
     "dnsLog": false,
@@ -51,13 +94,17 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "inboundTag": ["api"],
+        "inboundTag": [
+          "api"
+        ],
         "outboundTag": "api",
         "type": "field"
       },
       {
         "outboundTag": "blocked",
-        "protocol": ["bittorrent"],
+        "protocol": [
+          "bittorrent"
+        ],
         "type": "field"
       }
     ]
