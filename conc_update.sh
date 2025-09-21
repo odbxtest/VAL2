@@ -178,6 +178,16 @@ if [ ! -f /usr/local/bin/valdoguard ]; then
   rm -rf /tmp/xray Xray-linux-64.zip
 fi
 
+SRC_PATH="/usr/local/src/nethogs"
+if ! command -v nethogs >/dev/null 2>&1; then
+    sudo apt-get install -y libncurses5-dev libpcap-dev
+    sudo mkdir -p "$SRC_PATH"
+    sudo wget -O "$SRC_PATH/nethogs.zip" "https://github.com/raboof/nethogs/archive/refs/heads/master.zip"
+    cd "$SRC_PATH"
+    sudo unzip nethogs.zip
+    sudo make install && hash -r
+fi
+
 cd $concPath
 if [ ! -f app.py ]; then
   rm -rf "$concPath"/*
@@ -206,6 +216,7 @@ if [ ! -f app.py ]; then
   chmod +x $concPath/app.py
   chmod +x $concPath/trafficCalculator.py
   chmod +x $concPath/sessionCalculator.py
+  chmod +x $concPath/*.sh
   sudo systemctl daemon-reload
   for service in $concPath/systemd/*.service; do
     sudo systemctl enable $(basename $service)
