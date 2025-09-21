@@ -243,8 +243,6 @@ for service in "${services[@]}"; do
     fi
 done
 
-done
-
 # AUTH_LINE="auth required pam_exec.so ${concPath}/app.py"
 # if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
 #     sudo sed -i "/@include common-auth/i $AUTH_LINE" "/etc/pam.d/sshd"
