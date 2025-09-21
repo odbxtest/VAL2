@@ -214,8 +214,6 @@ if [ ! -f app.py ]; then
     fi
   done
   chmod +x $concPath/app.py
-  chmod +x $concPath/trafficCalculator.py
-  chmod +x $concPath/sessionCalculator.py
   chmod +x $concPath/*.sh
   sudo systemctl daemon-reload
   for service in $concPath/systemd/*.service; do
