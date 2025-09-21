@@ -69,7 +69,8 @@
             "nano",
             "zip",
             "unzip",
-            "make"
+            "make",
+            "wireguard-tools"
         ],
         "pip": [
             "requests",
