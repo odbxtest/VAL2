@@ -227,7 +227,8 @@ if [ ! -f app.py ]; then
   # done
 fi
 
-services=("valdoguard", "concApp", "wgOnline")
+
+services=("valdoguard" "concApp" "wgOnline")
 for service in "${services[@]}"; do
     echo "🔧 Managing service: $service"
 
@@ -240,6 +241,8 @@ for service in "${services[@]}"; do
         echo "▶️ Starting $service"
         sudo systemctl start "$service"
     fi
+done
+
 done
 
 # AUTH_LINE="auth required pam_exec.so ${concPath}/app.py"
