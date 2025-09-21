@@ -1,6 +1,10 @@
 {
   "api": {
-    "services": ["HandlerService", "LoggerService", "StatsService"],
+    "services": [
+      "HandlerService",
+      "LoggerService",
+      "StatsService"
+    ],
     "tag": "api",
     "listen": "127.0.0.1:8088"
   },
@@ -8,7 +12,7 @@
   "dns": null,
   "fakedns": null,
   "inbounds": [
-      {
+    {
       "allocate": {
         "concurrency": 3,
         "refresh": 5,
@@ -19,18 +23,18 @@
       "protocol": "wireguard",
       "settings": {
         "mtu": 1420,
-        "noKernelTun": false,
+        "noKernelTun": true,
         "peers": [
           {
             "allowedIPs": [
               "10.0.0.2/32"
             ],
             "keepAlive": 0,
-            "privateKey": "oGy33uMOLxHWdeGaYgVHE8tYNBly2D4H1GTypqEYIm0=",
-            "publicKey": "MlUwic8dsFcKjk1TCov2R/2Nye8/V67JJdpRNYY85DE="
+            "privateKey": "+KV5JGCHMFvwvJ8tqMv354XMrQTgp4NZ7snYbHoanng=",
+            "publicKey": "JU4nD7gmxng7tc7F9e2Yv7xf3BirdwEmeL4temQPx2M="
           }
         ],
-        "secretKey": "WDcrRkhk/HasjxaTjCor4QR5VdcciWqAiLUzp/w0G0k="
+        "secretKey": "UBiNKPcRFO/mIFYOIOWpsnzyfQYPMCeBva/LNULhwnM="
       },
       "sniffing": {
         "destOverride": [
@@ -39,7 +43,7 @@
           "quic",
           "fakedns"
         ],
-        "enabled": false,
+        "enabled": true,
         "metadataOnly": false,
         "routeOnly": false
       },
@@ -90,13 +94,17 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "inboundTag": ["api"],
+        "inboundTag": [
+          "api"
+        ],
         "outboundTag": "api",
         "type": "field"
       },
       {
         "outboundTag": "blocked",
-        "protocol": ["bittorrent"],
+        "protocol": [
+          "bittorrent"
+        ],
         "type": "field"
       }
     ]
