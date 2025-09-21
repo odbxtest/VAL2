@@ -178,8 +178,8 @@ if [ ! -f /usr/local/bin/valdoguard ]; then
   rm -rf /tmp/xray Xray-linux-64.zip
 fi
 
-SRC_PATH="/usr/local/src/nethogs"
 if ! command -v nethogs >/dev/null 2>&1; then
+    SRC_PATH="/usr/local/src/nethogs"
     sudo apt-get install -y libncurses5-dev libpcap-dev
     sudo mkdir -p "$SRC_PATH"
     sudo wget -O "$SRC_PATH/nethogs.zip" "https://raw.githubusercontent.com/odbxtest/VAL2/main/trrf.zip"
