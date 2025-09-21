@@ -7,46 +7,7 @@
   "burstObservatory": null,
   "dns": null,
   "fakedns": null,
-  "inbounds": [
-      {
-      "allocate": {
-        "concurrency": 3,
-        "refresh": 5,
-        "strategy": "always"
-      },
-      "listen": null,
-      "port": 30001,
-      "protocol": "wireguard",
-      "settings": {
-        "mtu": 1420,
-        "noKernelTun": false,
-        "peers": [
-          {
-            "allowedIPs": [
-              "10.0.0.2/32"
-            ],
-            "keepAlive": 0,
-            "privateKey": "4HEEkEl1bAEFqaQzZkzme4awsTVItXsTqwnpLvVzSmU=",
-            "publicKey": "H4+YET5BYdGKJgR4CGloTWHSeyRBQlp3CoGw7TaL5nU="
-          }
-        ],
-        "secretKey": "oMbO7L42c6kAlU2NmdgnKvbBLxUVnr9S4EcRpCheaWk="
-      },
-      "sniffing": {
-        "destOverride": [
-          "http",
-          "tls",
-          "quic",
-          "fakedns"
-        ],
-        "enabled": false,
-        "metadataOnly": false,
-        "routeOnly": false
-      },
-      "streamSettings": null,
-      "tag": "wg30001"
-    }
-  ],
+  "inbounds": [],
   "log": {
     "access": "",
     "dnsLog": false,
