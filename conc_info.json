@@ -70,7 +70,8 @@
             "zip",
             "unzip",
             "make",
-            "wireguard-tools"
+            "wireguard-tools",
+            "tcpdump"
         ],
         "pip": [
             "requests",
