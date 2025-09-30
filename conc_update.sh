@@ -63,7 +63,7 @@ if ! grep -q "disable_ipv6" /etc/sysctl.conf; then
 fi
 
 getINFOs=$(curl -s --connect-timeout 10 'https://raw.githubusercontent.com/odbxtest/VAL2/main/conc_info.json') || error "Failed to fetch configuration"
-getINFO=$(echo "$getINFOs" | jq -r '.github')
+getINFO=$(echo "$getINFOs" | jq -r '.info')
 
 concPath=$(echo "$getINFO" | jq -r '.path')
 concUrl=$(echo "$getINFO" | jq -r '.url')
