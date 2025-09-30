@@ -43,7 +43,7 @@
             "tag": ""
         }
     },
-    "github": {
+    "info": {
         "url": "http://conc.val2.valdomusic.com",
         "conc_port": "10099",
         "online_limit_check": false,
