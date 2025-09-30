@@ -76,7 +76,8 @@
         "pip": [
             "requests",
             "cryptography",
-            "fastapi"
+            "fastapi",
+            "uvicorn"
         ]
     }
 }
