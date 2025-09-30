@@ -19,7 +19,7 @@
         "strategy": "always"
       },
       "listen": null,
-      "port": 30000,
+      "port": 15000,
       "protocol": "wireguard",
       "settings": {
         "mtu": 1420,
