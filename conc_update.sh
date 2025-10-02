@@ -53,7 +53,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y -q \
     -o Dpkg::Options::="--force-confdef" \
     -o Dpkg::Options::="--force-confold" \
-    install sudo curl jq
+    install sudo curl ufw jq
 
 warn "Configuring IPV6"
 if ! grep -q "disable_ipv6" /etc/sysctl.conf; then
@@ -106,6 +106,7 @@ for port in $sshPorts; do
   fi
 done
 sudo systemctl restart sshd || error "Failed to restart SSH service"
+sudo ufw reload
 
 if [ ! -f /usr/bin/badvpn-udpgw ]; then
     curl -L -o /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/daybreakersx/premscript/master/badvpn-udpgw64" || { echo "Failed to download badvpn-udpgw"; }
@@ -162,7 +163,6 @@ rm -r $concPath
 # -----------------------
 
 apt_wait
-ufw disable
 if [ -n "$(sudo lsof -t -i :"$concPort")" ]; then
   sudo kill -9 $(sudo lsof -t -i :"$concPort") && info "Killed process on port $concPort"
 else
