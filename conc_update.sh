@@ -106,6 +106,7 @@ for port in $sshPorts; do
   fi
 done
 sudo systemctl restart sshd || error "Failed to restart SSH service"
+sudo ufw enable
 sudo ufw reload
 
 if [ ! -f /usr/bin/badvpn-udpgw ]; then
