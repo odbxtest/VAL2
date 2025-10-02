@@ -1,49 +1,49 @@
 {
-    "settings": {
-        "excludeUsers": [
-            "root",
-            "RevenTEST"
-        ]
-    },
-    "wireguard": {
-        "pPort": 10098,
-        "wgPort": 15000
-    },
-    "info": {
-        "url": "http://conc.val2.valdomusic.com",
-        "conc_port": "10099",
-        "online_limit_check": false,
-        "traffic_calculator": false,
-        "path": "/root/VAL2CONC",
-        "ssh_ports": [
-            "22",
-            "6985",
-            "771"
-        ],
-        "apt": [
-            "build-essential",
-            "sudo",
-            "jq",
-            "lsof",
-            "python3-pip",
-            "curl",
-            "openssl",
-            "screen",
-            "iptables",
-            "cron",
-            "wget",
-            "nano",
-            "zip",
-            "unzip",
-            "make",
-            "wireguard-tools",
-            "tcpdump"
-        ],
-        "pip": [
-            "requests",
-            "cryptography",
-            "fastapi",
-            "uvicorn"
-        ]
-    }
+  "url": "http://conc.val2.valdomusic.com",
+  "conc_port": "10099",
+  "awe_port": "10098",
+  "wg_port": "15000",
+  "ssh_ports": [
+    "22",
+    "6985",
+    "771"
+  ],
+  "trafficCalculator": {
+    "ssh": false,
+    "wg": false
+  },
+  "onlineCheck": {
+    "ssh": false,
+    "wg": false,
+    "excludeUsers": [
+      "root",
+      "RevenTEST"
+    ]
+  },
+  "path": "/root/VAL2CONC",
+  "apt": [
+    "build-essential",
+    "sudo",
+    "jq",
+    "lsof",
+    "python3-pip",
+    "curl",
+    "openssl",
+    "screen",
+    "iptables",
+    "cron",
+    "wget",
+    "nano",
+    "zip",
+    "unzip",
+    "make",
+    "wireguard-tools",
+    "tcpdump"
+  ],
+  "pip": [
+    "requests",
+    "cryptography",
+    "fastapi",
+    "uvicorn"
+  ]
 }
