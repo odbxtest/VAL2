@@ -6,42 +6,8 @@
         ]
     },
     "wireguard": {
-        "inbound": {
-            "allocate": {
-                "concurrency": 3,
-                "refresh": 5,
-                "strategy": "always"
-            },
-            "listen": null,
-            "port": 0,
-            "protocol": "wireguard",
-            "settings": {
-                "mtu": 1420,
-                "noKernelTun": true,
-                "peers": [
-                    {
-                        "allowedIPs": [],
-                        "keepAlive": 0,
-                        "privateKey": "",
-                        "publicKey": ""
-                    }
-                ],
-                "secretKey": ""
-            },
-            "sniffing": {
-                "destOverride": [
-                    "http",
-                    "tls",
-                    "quic",
-                    "fakedns"
-                ],
-                "enabled": true,
-                "metadataOnly": false,
-                "routeOnly": false
-            },
-            "streamSettings": null,
-            "tag": ""
-        }
+        "pPort": 10098,
+        "wgPort": 15000
     },
     "info": {
         "url": "http://conc.val2.valdomusic.com",
