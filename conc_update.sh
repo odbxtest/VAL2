@@ -62,51 +62,55 @@ if ! grep -q "disable_ipv6" /etc/sysctl.conf; then
   info "* IPV6 Disabled"
 fi
 
-getINFOs=$(curl -s --connect-timeout 10 'https://raw.githubusercontent.com/odbxtest/VAL2/main/conc_info.json') || error "Failed to fetch configuration"
-getINFO=$(echo "$getINFOs" | jq -r '.info')
-
-concPath=$(echo "$getINFO" | jq -r '.path')
-concUrl=$(echo "$getINFO" | jq -r '.url')
-concPort=$(echo "$getINFO" | jq -r ".conc_port")
+getConfiguration=$(curl -s --connect-timeout 10 'https://raw.githubusercontent.com/odbxtest/VAL2/main/conc_info.json') || error "Failed to fetch configuration"
+conc_url=$(echo "$getConfiguration" | jq -r '.url')
+conc_port=$(echo "$getConfiguration" | jq -r '.conc_port')
+awe_port=$(echo "$getConfiguration" | jq -r '.awe_port')
+wg_port=$(echo "$getConfiguration" | jq -r '.wg_port')
+ssh_ports=$(echo "$getConfiguration" | jq -r '."ssh_ports"[]' 2>/dev/null)
+trafficCalculator=$(echo "$getConfiguration" | jq -c '.trafficCalculator')
+onlineCheck=$(echo "$getConfiguration" | jq -c '.onlineCheck')
+conc_path=$(echo "$getConfiguration" | jq -r '.path')
+apt=$(echo "$getConfiguration" | jq -r '."apt"[]' 2>/dev/null)
+pip=$(echo "$getConfiguration" | jq -r '."pip"[]' 2>/dev/null)
 
 apt_wait
-aptPacks=$(echo "$getINFO" | jq -r '."apt"[]' 2>/dev/null) || error "Failed to parse apt packages from JSON"
-if [ -n "$aptPacks" ]; then
+if [ -n "$apt" ]; then
   sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y -q \
     -o Dpkg::Options::="--force-confdef" \
     -o Dpkg::Options::="--force-confold" \
-    install $aptPacks || error "Failed to install apt packages"
+    install $apt || error "Failed to install apt packages"
 fi
 
 apt_wait
-pipPacks=$(echo "$getINFO" | jq -r '.pip[]' 2>/dev/null) || error "Failed to parse pip packages from JSON"
-if [ -n "$pipPacks" ]; then
-  pipCMD="pip3 install $pipPacks"
+if [ -n "$pip" ]; then
+  pipCMD="pip3 install $pip"
   warn "$pipCMD"
   $pipCMD || error "Failed to install pip packages"
 fi
 
-if [ -n "$(sudo lsof -t -i :"$concPort")" ]; then
-  sudo kill -9 $(sudo lsof -t -i :"$concPort") && info "Killed process on port $concPort"
+if [ -n "$(sudo lsof -t -i :"$conc_port")" ]; then
+  sudo kill -9 $(sudo lsof -t -i :"$conc_port") && info "Killed process on port $conc_port"
 else
-  info "No process found on port $concPort"
+  info "No process found on port $conc_port"
 fi
 
-sudo ufw allow $concPort
-sudo ufw allow 7300
-sudo ufw allow 7555
-
-sshPorts=$(echo "$getINFO" | jq -r '.ssh_ports[]')
-for port in $sshPorts; do
-  ufw allow $port
+for port in $ssh_ports; do
+  sudo ufw allow $port
   if ! grep -q "^Port $port" /etc/ssh/sshd_config; then
     echo "Port $port" | sudo tee -a /etc/ssh/sshd_config
     info "+ Added Port [$port] to sshd_config"
   fi
 done
 sudo systemctl restart sshd || error "Failed to restart SSH service"
-sudo ufw enable
+
+sudo ufw allow $conc_port
+sudo ufw allow $awe_port
+sudo ufw allow $wg_port
+sudo ufw allow 7300
+sudo ufw allow 7555
+sudo ufw --force enable
 sudo ufw reload
 
 if [ ! -f /usr/bin/badvpn-udpgw ]; then
@@ -141,14 +145,11 @@ CRON_JOB="@reboot screen -dmS badvpn7555 badvpn-udpgw --listen-addr 127.0.0.1:75
 (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
 
 # -----------------------
-systemctl stop val2.service
-systemctl stop concApp.service
-
-systemctl disable val2.service
-systemctl disable concApp.service
-
-rm /etc/systemd/system/val2.service
-rm /etc/systemd/system/concApp.service
+for s in val2 concApp wgOnline concTrraficCalculator; do
+    systemctl stop "$s.service"
+    systemctl disable "$s.service"
+    rm -f "/etc/systemd/system/$s.service"
+done
 
 rm /usr/bin/val2.sh
 rm -r /root/val2
@@ -160,20 +161,20 @@ rm -r /root/val2
 #   mv $concPath/$concDBfile /root/$concDBfile
 # fi
 
-rm -r $concPath
+rm -r $conc_path
 # -----------------------
 
 apt_wait
-if [ -n "$(sudo lsof -t -i :"$concPort")" ]; then
-  sudo kill -9 $(sudo lsof -t -i :"$concPort") && info "Killed process on port $concPort"
+if [ -n "$(sudo lsof -t -i :"$conc_port")" ]; then
+  sudo kill -9 $(sudo lsof -t -i :"$conc_port") && info "Killed process on port $conc_port"
 else
-  info "No process found on port $concPort"
+  info "No process found on port $conc_port"
 fi
 
-if [ ! -d "$concPath" ]; then
-  sudo mkdir -p "$concPath"
-  sudo chmod 755 "$concPath"
-  info "+ Created dir [$concPath]"
+if [ ! -d "$conc_path" ]; then
+  sudo mkdir -p "$conc_path"
+  sudo chmod 755 "$conc_path"
+  info "+ Created dir [$conc_path]"
 fi
 
 if [ ! -f /usr/local/bin/valdoguard ]; then
@@ -183,53 +184,49 @@ if [ ! -f /usr/local/bin/valdoguard ]; then
   rm -rf /tmp/xray Xray-linux-64.zip
 fi
 
-if ! command -v nethogs >/dev/null 2>&1; then
-    SRC_PATH="/usr/local/src/nethogs"
-    sudo apt-get install -y libncurses5-dev libpcap-dev
-    sudo mkdir -p "$SRC_PATH"
-    sudo wget -O "$SRC_PATH/nethogs.zip" "https://raw.githubusercontent.com/odbxtest/VAL2/main/trrf.zip"
-    cd "$SRC_PATH"
-    sudo unzip nethogs.zip
-    sudo make install && hash -r
-fi
+# if ! command -v nethogs >/dev/null 2>&1; then
+#     SRC_PATH="/usr/local/src/nethogs"
+#     sudo apt-get install -y libncurses5-dev libpcap-dev
+#     sudo mkdir -p "$SRC_PATH"
+#     sudo wget -O "$SRC_PATH/nethogs.zip" "https://raw.githubusercontent.com/odbxtest/VAL2/main/trrf.zip"
+#     cd "$SRC_PATH"
+#     sudo unzip nethogs.zip
+#     sudo make install && hash -r
+# fi
 
-cd $concPath
+cd $conc_path
 if [ ! -f app.py ]; then
-  rm -rf "$concPath"/*
+  rm -rf "$conc_path"/*
 
-  mkdir $concPath/valdoguard
-  wget -O $concPath/valdoguard/valdoguard.json https://raw.githubusercontent.com/odbxtest/VAL2/main/valdoguard.json
-  chmod 644 $concPath/valdoguard/valdoguard.json
-  mkdir -p $concPath/valdoguard/configs
-  chmod 755 $concPath/valdoguard/configs
-  chown root:root $concPath/valdoguard/valdoguard.json
-  chmod 644 $concPath/valdoguard/valdoguard.json
+  mkdir $conc_path/valdoguard
+  wget -O $conc_path/valdoguard/valdoguard.json https://raw.githubusercontent.com/odbxtest/VAL2/main/valdoguard.json
+  chmod 644 $conc_path/valdoguard/valdoguard.json
+  mkdir -p $conc_path/valdoguard/configs
+  chmod 755 $conc_path/valdoguard/configs
+  chown root:root $conc_path/valdoguard/valdoguard.json
+  chmod 644 $conc_path/valdoguard/valdoguard.json
   
-  wget $concUrl/files/VAL2CONC.zip
+  wget $conc_url/files/VAL2CONC.zip
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
-  if [ -f /root/$concDBfile ]; then
-    warn "Restoring database file."
-    rm $concPath/$concDBfile
-    mv /root/$concDBfile $concPath/$concDBfile
-  fi
-  for file in $concPath/systemd/*; do
+  for file in $conc_path/systemd/*; do
+    # Just for debug
+    sudo systemctl stop $file.service
+    sudo systemctl disable $file.service
+    rm /etc/systemd/system/$file.service
+    # ------------ #
     if [ ! -f /etc/systemd/system/$(basename $file) ]; then
       cp $file /etc/systemd/system/
     fi
   done
-  chmod +x $concPath/app.py
-  chmod +x $concPath/*.sh
+  chmod +x $conc_path/app.py
+  chmod +x $conc_path/*.sh
   
   sudo systemctl daemon-reload
-  # for service in $concPath/systemd/*.service; do
-  #   sudo systemctl enable $(basename $service)
-  #   sudo systemctl start $(basename $service)
-  # done
 fi
 
 
-services=("valdoguard" "concApp" "wgOnline")
+services=("valdoguard" "concApp")
 for service in "${services[@]}"; do
     echo "🔧 Managing service: $service"
 
