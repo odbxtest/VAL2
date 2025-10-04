@@ -1,3 +1,4 @@
+
 {
   "url": "http://conc.val2.valdomusic.com",
   "conc_port": "10099",
@@ -14,11 +15,7 @@
   },
   "onlineCheck": {
     "ssh": false,
-    "wg": false,
-    "excludeUsers": [
-      "root",
-      "RevenTEST"
-    ]
+    "wg": false
   },
   "path": "/root/VAL2CONC",
   "apt": [
