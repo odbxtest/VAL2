@@ -207,7 +207,7 @@ if [ ! -f app.py ]; then
   chown root:root $conc_path/valdoguard/valdoguard.json
   chmod 644 $conc_path/valdoguard/valdoguard.json
   
-  wget $conc_url/files/VAL2CONC.zip
+  wget "$conc_url/files/VAL2CONC.zip" || error "Failed to download VAL2CONC.zip"
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
 for file in "$conc_path"/systemd/*; do
