@@ -18,6 +18,7 @@ error() {
     exit 1
 }
 
+cd /root/
 
 apt_wait() {
   echo "Checking dpkg/apt locks"
