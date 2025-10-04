@@ -247,11 +247,6 @@ done
 CRON_JOB="0 * * * * /usr/bin/systemctl restart concApp >/dev/null 2>&1"
 (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
 
-#!/usr/bin/env bash
-set -euo pipefail
-
-
-#!/usr/bin/env bash
 set -euo pipefail
 
 # === CONFIGURATION === #
