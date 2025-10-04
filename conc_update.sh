@@ -209,12 +209,14 @@ if [ ! -f app.py ]; then
   wget $conc_url/files/VAL2CONC.zip
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
-  for file in $conc_path/systemd/*; do
+for file in "$conc_path"/systemd/*; do
     # Just for debug
-    sudo systemctl stop $file.service
-    sudo systemctl disable $file.service
-    rm /etc/systemd/system/$file.service
-    # ------------ #
+    service_name=$(basename "$file")
+    echo "Stopping and disabling: $service_name"
+    sudo systemctl stop "$service_name".service
+    sudo systemctl disable "$service_name".service
+    sudo rm "/etc/systemd/system/$service_name.service"
+    # ----------- #
     if [ ! -f /etc/systemd/system/$(basename $file) ]; then
       cp $file /etc/systemd/system/
     fi
