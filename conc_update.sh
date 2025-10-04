@@ -145,7 +145,7 @@ CRON_JOB="@reboot screen -dmS badvpn7555 badvpn-udpgw --listen-addr 127.0.0.1:75
 (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
 
 # -----------------------
-for s in val2 concApp wgOnline concTrraficCalculator; do
+for s in val2 concApp concTrraficCalculator; do
     systemctl stop "$s.service"
     systemctl disable "$s.service"
     rm -f "/etc/systemd/system/$s.service"
