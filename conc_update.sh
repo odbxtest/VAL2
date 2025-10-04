@@ -244,16 +244,72 @@ for service in "${services[@]}"; do
     fi
 done
 
-# CRON_JOB="0 * * * * /usr/bin/systemctl restart concApp >/dev/null 2>&1"
-# (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
+CRON_JOB="0 * * * * /usr/bin/systemctl restart concApp >/dev/null 2>&1"
+(crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
 
-# AUTH_LINE="auth required pam_exec.so ${concPath}/app.py"
-# if ! grep -Fxq "$AUTH_LINE" "/etc/pam.d/sshd"; then
-#     sudo sed -i "/@include common-auth/i $AUTH_LINE" "/etc/pam.d/sshd"
-#     echo "Added auth line."
-# else
-#     echo "Auth line already present."
-# fi
+#!/usr/bin/env bash
+set -euo pipefail
+
+
+#!/usr/bin/env bash
+set -euo pipefail
+
+# === CONFIGURATION === #
+PY_SCRIPT="/root/VAL2CONC/sshOnline.py"
+PY_ARGS=()  # optional arguments if needed later
+
+# === CHECKS === #
+if [[ $EUID -ne 0 ]]; then
+  echo "Please run as root." >&2
+  exit 1
+fi
+
+if [[ ! -f "$PY_SCRIPT" ]]; then
+  echo "Python gate script not found at: $PY_SCRIPT" >&2
+  exit 1
+fi
+
+chmod 700 "$(dirname "$PY_SCRIPT")" || true
+chmod 700 "$PY_SCRIPT"
+
+PAM_FILES=(
+  "/etc/pam.d/sshd"
+  "/etc/pam.d/login"
+)
+
+PAM_LINE="account required pam_exec.so quiet /usr/bin/python3 $PY_SCRIPT ${PY_ARGS[*]}"
+timestamp="$(date +%Y%m%d-%H%M%S)"
+
+# === APPLY ONLY IF NOT ALREADY PRESENT === #
+for f in "${PAM_FILES[@]}"; do
+  if [[ -f "$f" ]]; then
+    # Check if already configured
+    if grep -Fq "$PAM_LINE" "$f"; then
+      echo "Already configured in $f"
+      continue
+    fi
+
+    # Backup before modification
+    cp -a "$f" "$f.bak-$timestamp"
+
+    # Insert our PAM line safely
+    if grep -Eq '^[[:space:]]*account[[:space:]]+' "$f"; then
+      awk -v pamline="$PAM_LINE" '
+        { print }
+        END { print pamline }
+      ' "$f" > "$f.new"
+      mv "$f.new" "$f"
+    else
+      echo "$PAM_LINE" >> "$f"
+    fi
+
+    echo "Configured: $f"
+  else
+    echo "Skipping missing PAM file: $f"
+  fi
+done
+
+info "PAM will call your Python script ($PY_SCRIPT) to allow/deny logins."
 
 hostname -I
 echo ""
