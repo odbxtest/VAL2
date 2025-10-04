@@ -213,9 +213,9 @@ for file in "$conc_path"/systemd/*; do
     # Just for debug
     service_name=$(basename "$file")
     echo "Stopping and disabling: $service_name"
-    sudo systemctl stop "$service_name".service
-    sudo systemctl disable "$service_name".service
-    sudo rm "/etc/systemd/system/$service_name.service"
+    sudo systemctl stop "$service_name".service >> /dev/null 2>&1
+    sudo systemctl disable "$service_name".service >> /dev/null 2>&1
+    sudo rm "/etc/systemd/system/$service_name.service" >> /dev/null 2>&1
     # ----------- #
     if [ ! -f /etc/systemd/system/$(basename $file) ]; then
       cp $file /etc/systemd/system/
