@@ -119,6 +119,23 @@ sudo ufw allow 7555
 sudo ufw --force enable
 sudo ufw reload
 
+# ********************************* #
+for s in awgApp; do
+    systemctl stop "$s.service"
+    systemctl disable "$s.service"
+    rm -f "/etc/systemd/system/$s.service"
+done
+
+# rm $concPath/$concDBfile
+# concDBfile=$(echo "$getINFO" | jq -r ".database")
+# if [ -f $concPath/$concDBfile ]; then
+#   warn "Saving database file."
+#   mv $concPath/$concDBfile /root/$concDBfile
+# fi
+
+rm -r $conc_awg_path
+# ********************************* #
+
 apt_wait
 
 if [ -n "$(sudo lsof -t -i :"$awg_port")" ]; then
