@@ -318,5 +318,6 @@ echo ""
 # else
 #     info "Cancelled."
 # fi
+trap - ERR
 
 exit 0
