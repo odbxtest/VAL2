@@ -126,13 +126,6 @@ for s in awgApp; do
     rm -f "/etc/systemd/system/$s.service"
 done
 
-# rm $concPath/$concDBfile
-# concDBfile=$(echo "$getINFO" | jq -r ".database")
-# if [ -f $concPath/$concDBfile ]; then
-#   warn "Saving database file."
-#   mv $concPath/$concDBfile /root/$concDBfile
-# fi
-
 rm -r $conc_awg_path
 # ********************************* #
 
