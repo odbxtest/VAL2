@@ -2,7 +2,7 @@
 {
   "url": "http://conc.val2.valdomusic.com",
   "conc_port": "10099",
-  "awe_port": "10098",
+  "awg_port": "10098",
   "wg_port": "15000",
   "ssh_ports": [
     "22",
