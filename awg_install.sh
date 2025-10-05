@@ -76,6 +76,12 @@ conc_wg_path=$(echo "$getConfiguration" | jq -r '.wg_path')
 apt=$(echo "$getConfiguration" | jq -r '."apt"[]' 2>/dev/null)
 pip=$(echo "$getConfiguration" | jq -r '."pip"[]' 2>/dev/null)
 
+if [[ -d "$awg_path" && "$awg_path" == /root/* ]]; then
+    echo "OK - $awg_path"
+else
+    error "Error: Invalid or unsafe path '$awg_path'."
+fi
+
 apt_wait
 if [ -n "$apt" ]; then
   sudo DEBIAN_FRONTEND=noninteractive \
