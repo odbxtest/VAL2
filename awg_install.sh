@@ -134,10 +134,11 @@ if [ ! -f app.py ]; then
   rm -rf "$conc_awg_path"/*
   
   wget "$conc_url/files/VAL2AWG.zip" || error "Failed to download VAL2AWG.zip"
-  unzip VAL2CONC.zip
+  unzip VAL2AWG.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
   sudo pip3 install -r $conc_awg_path/requirements.txt
-for file in "$conc_awg_path"/systemd/*; do
+  
+  for file in "$conc_awg_path"/systemd/*; do
     # Just for debug
     service_name=$(basename "$file")
     echo "Stopping and disabling: $service_name"
@@ -149,6 +150,7 @@ for file in "$conc_awg_path"/systemd/*; do
       cp $file /etc/systemd/system/
     fi
   done
+  
   chmod +x $conc_awg_path/app.py
   chmod +x $conc_awg_path/*.sh
   
