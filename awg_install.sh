@@ -9,8 +9,6 @@ info()  { echo -e "${GR}${1:-}${NC}"; }
 warn()  { echo -e "${YE}${1:-}${NC}"; }
 error() { echo -e "${RED}${1:-Unknown error}${NC}" 1>&2; exit 1; }
 
-set -euo pipefail
-
 cd /root/
 
 apt_wait() {
