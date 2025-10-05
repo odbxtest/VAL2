@@ -130,6 +130,7 @@ if [ ! -f app.py ]; then
   wget "$conc_url/files/VAL2AWG.zip" || error "Failed to download VAL2AWG.zip"
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
+  sudo pip3 install -r requirements.txt
 for file in "$awg_path"/systemd/*; do
     # Just for debug
     service_name=$(basename "$file")
