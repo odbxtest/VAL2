@@ -9,10 +9,6 @@ info()  { echo -e "${GR}${1:-}${NC}"; }
 warn()  { echo -e "${YE}${1:-}${NC}"; }
 error() { echo -e "${RED}${1:-Unknown error}${NC}" 1>&2; exit 1; }
 
-set -euo pipefail
-set -e
-trap 'warn "ERR at line $LINENO: $BASH_COMMAND"' ERR
-
 cd /root/
 
 apt_wait() {
@@ -240,6 +236,9 @@ done
 CRON_JOB="0 * * * * /usr/bin/systemctl restart concApp >/dev/null 2>&1"
 (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
 
+
+set -euo pipefail
+
 # === CONFIGURATION === #
 PY_SCRIPT="/root/VAL2CONC/sshOnline.py"
 PY_ARGS=()  # optional arguments if needed later
@@ -309,6 +308,5 @@ echo ""
 # else
 #     info "Cancelled."
 # fi
-trap - ERR
 
 exit 0
