@@ -75,6 +75,12 @@ conc_path=$(echo "$getConfiguration" | jq -r '.path')
 apt=$(echo "$getConfiguration" | jq -r '."apt"[]' 2>/dev/null)
 pip=$(echo "$getConfiguration" | jq -r '."pip"[]' 2>/dev/null)
 
+if [[ -d "$conc_path" && "$conc_path" == /root/* ]]; then
+    echo "OK - $conc_path"
+else
+    error "Error: Invalid or unsafe path '$conc_path'."
+fi
+
 apt_wait
 if [ -n "$apt" ]; then
   sudo DEBIAN_FRONTEND=noninteractive \
