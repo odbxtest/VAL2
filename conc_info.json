@@ -18,6 +18,7 @@
     "wg": false
   },
   "path": "/root/VAL2CONC",
+  "wg_path": "/root/VAL2AWG",
   "apt": [
     "build-essential",
     "sudo",
