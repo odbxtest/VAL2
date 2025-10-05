@@ -10,8 +10,6 @@ warn()  { echo -e "${YE}${1:-}${NC}"; }
 error() { echo -e "${RED}${1:-Unknown error}${NC}" 1>&2; exit 1; }
 
 set -euo pipefail
-set -e
-trap 'warn "ERR at line $LINENO: $BASH_COMMAND"' ERR
 
 cd /root/
 
@@ -185,5 +183,4 @@ CRON_JOB="0 * * * * /usr/bin/systemctl restart awgApp >/dev/null 2>&1"
 hostname -I
 echo ""
 
-trap - ERR
 exit 0
