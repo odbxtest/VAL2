@@ -75,8 +75,9 @@ conc_awg_path=$(echo "$getConfiguration" | jq -r '.awg_path')
 apt=$(echo "$getConfiguration" | jq -r '."apt"[]' 2>/dev/null)
 pip=$(echo "$getConfiguration" | jq -r '."pip"[]' 2>/dev/null)
 
-if [[ -d "$conc_awg_path" && "$conc_awg_path" == /root/* ]]; then
-    echo "OK - $conc_awg_path"
+real_path=$(realpath "$conc_awg_path" 2>/dev/null)
+if [[ -d "$real_path" && "$real_path" == /root/* ]]; then
+    echo "OK - $real_path"
 else
     error "Error: Invalid or unsafe path '$conc_awg_path'."
 fi
