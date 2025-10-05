@@ -72,14 +72,14 @@ ssh_ports=$(echo "$getConfiguration" | jq -r '."ssh_ports"[]' 2>/dev/null)
 trafficCalculator=$(echo "$getConfiguration" | jq -c '.trafficCalculator')
 onlineCheck=$(echo "$getConfiguration" | jq -c '.onlineCheck')
 conc_path=$(echo "$getConfiguration" | jq -r '.path')
-conc_wg_path=$(echo "$getConfiguration" | jq -r '.wg_path')
+conc_awg_path=$(echo "$getConfiguration" | jq -r '.awg_path')
 apt=$(echo "$getConfiguration" | jq -r '."apt"[]' 2>/dev/null)
 pip=$(echo "$getConfiguration" | jq -r '."pip"[]' 2>/dev/null)
 
-if [[ -d "$awg_path" && "$awg_path" == /root/* ]]; then
-    echo "OK - $awg_path"
+if [[ -d "$conc_awg_path" && "$conc_awg_path" == /root/* ]]; then
+    echo "OK - $conc_awg_path"
 else
-    error "Error: Invalid or unsafe path '$awg_path'."
+    error "Error: Invalid or unsafe path '$conc_awg_path'."
 fi
 
 apt_wait
@@ -123,21 +123,21 @@ else
   info "No process found on port $awg_port"
 fi
 
-if [ ! -d "$awg_path" ]; then
-  sudo mkdir -p "$awg_path"
-  sudo chmod 755 "$awg_path"
-  info "+ Created dir [$awg_path]"
+if [ ! -d "$conc_awg_path" ]; then
+  sudo mkdir -p "$conc_awg_path"
+  sudo chmod 755 "$conc_awg_path"
+  info "+ Created dir [$conc_awg_path]"
 fi
 
-cd $awg_path
+cd $conc_awg_path
 if [ ! -f app.py ]; then
-  rm -rf "$awg_path"/*
+  rm -rf "$conc_awg_path"/*
   
   wget "$conc_url/files/VAL2AWG.zip" || error "Failed to download VAL2AWG.zip"
   unzip VAL2CONC.zip
   find . -type f -name "*.py" -exec sed -i -e 's/\r$//' {} \;
   sudo pip3 install -r requirements.txt
-for file in "$awg_path"/systemd/*; do
+for file in "$conc_awg_path"/systemd/*; do
     # Just for debug
     service_name=$(basename "$file")
     echo "Stopping and disabling: $service_name"
@@ -149,8 +149,8 @@ for file in "$awg_path"/systemd/*; do
       cp $file /etc/systemd/system/
     fi
   done
-  chmod +x $awg_path/app.py
-  chmod +x $awg_path/*.sh
+  chmod +x $conc_awg_path/app.py
+  chmod +x $conc_awg_path/*.sh
   
   sudo systemctl daemon-reload
 fi
