@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 RED='\033[0;31m'
 GR='\033[0;32m'
@@ -252,8 +253,6 @@ done
 
 CRON_JOB="0 * * * * /usr/bin/systemctl restart concApp >/dev/null 2>&1"
 (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
-
-set -euo pipefail
 
 # === CONFIGURATION === #
 PY_SCRIPT="/root/VAL2CONC/sshOnline.py"
