@@ -1,5 +1,4 @@
 #!/bin/bash
-set -euo pipefail
 
 RED='\033[0;31m'
 GR='\033[0;32m'
@@ -18,6 +17,10 @@ error() {
     echo -e "${RED}$1${NC}" 1>&2
     exit 1
 }
+
+set -euo pipefail
+set -e
+trap 'warn' ERR
 
 cd /root/
 
@@ -150,6 +153,7 @@ if [ ! -f app.py ]; then
     if [ ! -f /etc/systemd/system/$(basename $file) ]; then
       cp $file /etc/systemd/system/
     fi
+    
   done
   
   chmod +x $conc_awg_path/app.py
