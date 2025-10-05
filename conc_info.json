@@ -14,7 +14,7 @@
     "wg": false
   },
   "onlineCheck": {
-    "ssh": false,
+    "ssh": true,
     "wg": false
   },
   "path": "/root/VAL2CONC",
