@@ -194,4 +194,5 @@ CRON_JOB="0 * * * * /usr/bin/systemctl restart awgApp >/dev/null 2>&1"
 hostname -I
 echo ""
 
+trap - ERR
 exit 0
