@@ -1,4 +1,3 @@
-
 {
   "url": "http://conc.val2.valdomusic.com",
   "conc_port": "10099",
@@ -18,7 +17,7 @@
     "wg": false
   },
   "path": "/root/VAL2CONC",
-  "wg_path": "/root/VAL2AWG",
+  "awg_path": "/root/VAL2AWG",
   "apt": [
     "build-essential",
     "sudo",
