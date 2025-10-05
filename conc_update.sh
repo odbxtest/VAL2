@@ -164,14 +164,6 @@ done
 
 rm /usr/bin/val2.sh
 rm -r /root/val2
-
-# rm $concPath/$concDBfile
-# concDBfile=$(echo "$getINFO" | jq -r ".database")
-# if [ -f $concPath/$concDBfile ]; then
-#   warn "Saving database file."
-#   mv $concPath/$concDBfile /root/$concDBfile
-# fi
-
 rm -r $conc_path
 # -----------------------
 
