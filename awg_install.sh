@@ -56,7 +56,6 @@ sudo DEBIAN_FRONTEND=noninteractive \
     -o Dpkg::Options::="--force-confold" \
     install sudo curl ufw jq
 
-warn "Configuring IPV6"
 if ! grep -q "disable_ipv6" /etc/sysctl.conf; then
   echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.conf
   sudo sysctl -p
