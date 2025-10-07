@@ -66,10 +66,10 @@ conc_path=$(echo "$getConfiguration" | jq -r '.path')
 apt=$(echo "$getConfiguration" | jq -r '."apt"[]' 2>/dev/null)
 pip=$(echo "$getConfiguration" | jq -r '."pip"[]' 2>/dev/null)
 
-if [[ -d "$conc_path" && "$conc_path" == /root/* ]]; then
-    echo "OK - $conc_path"
+if [[ "$conc_awg_path" == *"/"* ]]; then
+    echo "OK - $conc_awg_path"
 else
-    error "Error: Invalid or unsafe path '$conc_path'."
+    error "Error: Invalid or unsafe path '$conc_awg_path'."
 fi
 
 apt_wait
