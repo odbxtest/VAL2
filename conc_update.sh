@@ -94,6 +94,12 @@ else
   info "No process found on port $conc_port"
 fi
 
+if ! grep -Fxq "ClientAliveInterval 60" /etc/ssh/sshd_config; then
+    echo "ClientAliveInterval 60" | sudo tee -a /etc/ssh/sshd_config
+fi
+if ! grep -Fxq "ClientAliveCountMax 3" /etc/ssh/sshd_config; then
+    echo "ClientAliveCountMax 3" | sudo tee -a /etc/ssh/sshd_config
+fi
 for port in $ssh_ports; do
   sudo ufw allow $port
   if ! grep -q "^Port $port" /etc/ssh/sshd_config; then
