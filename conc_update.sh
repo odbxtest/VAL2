@@ -50,9 +50,9 @@ sudo DEBIAN_FRONTEND=noninteractive \
 if ! grep -q "disable_ipv6" /etc/sysctl.conf; then
   warn "Configuring IPV6"
   echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.conf
-  sudo sysctl -p
   info "* IPV6 Disabled"
 fi
+sudo sysctl -p
 
 getConfiguration=$(curl -s --connect-timeout 10 'https://raw.githubusercontent.com/odbxtest/VAL2/main/conc_info.json') || error "Failed to fetch configuration"
 conc_url=$(echo "$getConfiguration" | jq -r '.url')
