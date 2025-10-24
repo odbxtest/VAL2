@@ -54,6 +54,17 @@ if ! grep -q "disable_ipv6" /etc/sysctl.conf; then
 fi
 sudo sysctl -p
 
+sudo tee /etc/systemd/resolved.conf > /dev/null <<'EOF'
+[Resolve]
+DNS=1.1.1.1 1.0.0.1
+FallbackDNS=9.9.9.9 149.112.112.112
+Domains=~.
+DNSOverTLS=yes
+DNSSEC=allow-downgrade
+LLMNR=no
+EOF
+sudo systemctl restart systemd-resolved
+
 getConfiguration=$(curl -s --connect-timeout 10 'https://raw.githubusercontent.com/odbxtest/VAL2/main/conc_info.json') || error "Failed to fetch configuration"
 conc_url=$(echo "$getConfiguration" | jq -r '.url')
 conc_port=$(echo "$getConfiguration" | jq -r '.conc_port')
