@@ -94,7 +94,7 @@ fi
 
 apt_wait
 if [ -n "$pip" ]; then
-  pipCMD="pip3 install $pip"
+  pipCMD="pip3 install $pip --break-system-packages"
   warn "$pipCMD"
   $pipCMD || error "Failed to install pip packages"
 fi
