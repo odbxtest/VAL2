@@ -94,7 +94,7 @@ fi
 
 apt_wait
 if [ -n "$pip" ]; then
-  pipCMD="pip3 install $pip --break-system-packages"
+  pipCMD="pip3 install $pip"
   warn "$pipCMD"
   $pipCMD || error "Failed to install pip packages"
 fi
@@ -160,7 +160,7 @@ CRON_JOB="@reboot screen -dmS badvpn7555 badvpn-udpgw --listen-addr 127.0.0.1:75
 (crontab -l 2>/dev/null | grep -v -F "$CRON_JOB"; echo "$CRON_JOB") | crontab -
 
 # -----------------------
-for s in val2 concApp concTrraficCalculator; do
+for s in val2 concApp concTrraficCalculator sshTraffic; do
     systemctl stop "$s.service"
     systemctl disable "$s.service"
     rm -f "/etc/systemd/system/$s.service"
@@ -235,7 +235,7 @@ for file in "$conc_path"/systemd/*; do
 fi
 
 
-services=("valdoguard" "concApp")
+services=("concApp")
 for service in "${services[@]}"; do
     echo "🔧 Managing service: $service"
 
